@@ -1,0 +1,70 @@
+.device__add__border {
+  border-radius: 16px;
+  background: var(--white, #fff);
+  box-shadow: 2px 2px 8px 0px rgba(232, 239, 244, 0.8);
+  width: 1130px;
+  height: 530px;
+}
+
+.device__add__label {
+  color: var(--gray-gray-500, #282739);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.device__add__input {
+  width: 540px;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--white, #fff);
+  border: 1.5px solid var(--gray-gray-100, #d4d4d7);
+  color: var(--gray-gray-400-text, #535261);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.add__title {
+  color: var(--orange-orange-500, #ff7506);
+  font-family: Nunito;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.w-100 {
+  width: 1100px;
+}
+
+.required__text {
+  color: var(--gray-gray-300, #7e7d88);
+  font-family: Nunito;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+.cancel__button {
+  border-radius: 8px;
+  border: 1.5px solid var(--orange-orange-400, #ff9138);
+  background: var(--orange-orange-50, #fff2e7);
+  color: var(--orange-orange-400, #ff9138);
+  box-shadow: 0px 0px 6px 0px #e7e9f2;
+  width: 148px;
+  height: 48px;
+}
+
+.add__button {
+  background: var(--orange-orange-400, #ff9138);
+  color: #fff;
+  width: 148px;
+  height: 48px;
+  box-shadow: 0px 0px 6px 0px #e7e9f2;
+}

@@ -1,0 +1,41 @@
+.device__detail__border {
+  width: 1110px;
+  border-radius: 16px;
+  background: var(--white, #fff);
+  box-shadow: 2px 2px 8px 0px rgba(232, 239, 244, 0.8);
+  height: 580px;
+}
+
+.detail__text__1 {
+  color: var(--gray-gray-500, #282739);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.detail__text__2 {
+  color: var(--gray-gray-400-text, #535261);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.ms-107 {
+  margin-left: 107px;
+}
+
+.ms-125 {
+  margin-left: 125px;
+}
+
+.ms-89 {
+  margin-left: 89px;
+}
+
+.ms-250 {
+  margin-left: 250px;
+}

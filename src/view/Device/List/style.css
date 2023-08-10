@@ -1,0 +1,135 @@
+.device__list__select {
+  width: 300px;
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-gray-100, #d4d4d7);
+  background: var(--white, #fff);
+}
+
+table {
+  font-family: Nunito;
+  font-style: normal;
+  width: 1110px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+thead {
+  color: var(--white, #fff);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 24px;
+  background: var(--orange-orange-400, #ff9138);
+}
+
+tbody {
+  color: var(--gray-gray-400-text, #535261);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  background: var(--white, #fff);
+}
+
+table,
+td,
+th {
+  border: 1px solid #ffe3cd;
+  text-align: left;
+  padding: 8px;
+  height: 48px;
+  border-collapse: collapse;
+}
+
+tr:nth-child(even) {
+  background: var(--orange-orange-50, #fff2e7);
+}
+
+.title__text {
+  color: var(--orange-orange-500, #ff7506);
+  font-family: Nunito;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 36px;
+}
+
+.device__list__label {
+  color: var(--gray-gray-500, #282739);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.search__icon {
+  position: absolute;
+  right: 150px;
+  top: 85px;
+}
+
+.ms-190 {
+  margin-left: 190px;
+}
+
+.pe-35 {
+  padding-right: 35px;
+}
+
+.add__border,
+.update__border,
+.back__border {
+  border-radius: 8px 0px 0px 8px;
+  background: var(--orange-orange-50, #fff2e7);
+  box-shadow: 0px 0px 6px 0px #e7e9f2;
+  position: absolute;
+  display: inline-flex;
+  padding: 12px 4px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  width: 80px;
+  height: 94px;
+  right: 0;
+  top: 130px;
+}
+
+.add__text {
+  color: var(--orange-orange-500, #ff7506);
+  text-align: center;
+  font-family: Nunito;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.pagination {
+  display: inline-block;
+  position: absolute;
+  right: 120px;
+}
+
+.pagination a {
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: var(--gray-blue-gray-4-place-holder, #7e7d88);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.pagination a.active {
+  color: #fff;
+  border-radius: 4px;
+  background: var(--orange-orange-500, #ff7506);
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+}
