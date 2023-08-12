@@ -3,7 +3,7 @@
 }
 
 .mt-5 {
-  margin-top: 5px;
+  margin-top: 5px !important;
 }
 
 .mt-70 {
@@ -101,9 +101,18 @@
 }
 
 .text-danger {
-  color: #ff4747;
+  color: #ff4747 !important;
 }
 
 .w-150 {
   width: 150px !important;
+}
+
+.breadcrumb__text {
+  color: var(--gray-blue-gray-4-place-holder, #7e7d88);
+  font-family: Nunito;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
 }

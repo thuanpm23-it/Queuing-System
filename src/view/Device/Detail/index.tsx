@@ -6,11 +6,16 @@ import Header from "../../../layout/Header";
 import UpdateIcon from "../../../assets/images/Edit Square.svg";
 
 const DeviceDetail = () => {
+  const breadcrumbPaths = [
+    { label: "Thiết bị" },
+    { label: "Danh sách thiết bị" },
+    { label: "Chi tiết thiết bị" },
+  ];
   return (
     <Row className="main__wrapper">
       <MenuPage />
       <Col span={20} className="main__bg">
-        <Header />
+        <Header breadcrumbPaths={breadcrumbPaths} />
         <Col span={24} className="ms-30">
           <div>
             <span className="title__text">Quản lý thiết bị</span>

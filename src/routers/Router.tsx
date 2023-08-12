@@ -1,8 +1,8 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "../view/Signup/Login";
-import ResetPassword from "../view/Signup/ResetPassword";
 import NewPassword from "../view/Signup/NewPassword";
+import ForgotPassword from "./../view/Signup/ForgotPassword/index";
 import Profile from "../view/Profile";
 import Dashboard from "../view/Dashboard";
 import DeviceList from "../view/Device/List";
@@ -30,7 +30,7 @@ const Routers = () => {
     <>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/resetpassword" element={<ResetPassword />} />
+        <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/newpassword" element={<NewPassword />} />
 
         <Route path="/profile" element={<Profile />} />
@@ -44,7 +44,7 @@ const Routers = () => {
 
         <Route path="/service" element={<ServiceList />} />
         <Route path="/service/add" element={<ServiceAdd />} />
-        <Route path="/service/update" element={<ServiceUpdate />} />
+        <Route path="/service/update/:id" element={<ServiceUpdate />} />
         <Route path="/service/detail" element={<ServiceDetail />} />
 
         <Route path="/numberallocaiton" element={<NumberList />} />
@@ -55,11 +55,11 @@ const Routers = () => {
 
         <Route path="/role" element={<RoleList />} />
         <Route path="/role/add" element={<RoleAdd />} />
-        <Route path="/role/update" element={<RoleUpdate />} />
+        <Route path="/role/update/:id" element={<RoleUpdate />} />
 
         <Route path="/account" element={<AccountList />} />
         <Route path="/account/add" element={<AccountAdd />} />
-        <Route path="/account/update" element={<AccountUpdate />} />
+        <Route path="/account/update/:id" element={<AccountUpdate />} />
 
         <Route path="/userlog" element={<UserLogList />} />
       </Routes>

@@ -8,11 +8,15 @@ import AddIcon from "../../../assets/images/add-square.svg";
 import { CaretRightOutlined, CaretLeftOutlined } from "@ant-design/icons";
 
 const DeviceList = () => {
+  const breadcrumbPaths = [
+    { label: "Thiết bị" },
+    { label: "Danh sách thiết bị" },
+  ];
   return (
     <Row className="main__wrapper">
       <MenuPage />
       <Col span={20} className="main__bg">
-        <Header />
+        <Header breadcrumbPaths={breadcrumbPaths} />
         <Col span={24} className="ms-30">
           <div>
             <span className="title__text">Danh sách thiết bị</span>

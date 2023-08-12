@@ -76,3 +76,12 @@
   margin-left: 480px;
   padding-top: 360px;
 }
+
+.login__error {
+  color: var(--red, #e73f3f);
+  font-family: Nunito;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+}

@@ -6,11 +6,17 @@ import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 
 const DeviceUpdate = () => {
+  const breadcrumbPaths = [
+    { label: "Thiết bị" },
+    { label: "Danh sách thiết bị" },
+    { label: "Cập nhật thiết bị" },
+  ];
+
   return (
     <Row className="main__wrapper">
       <MenuPage />
       <Col span={20} className="main__bg">
-        <Header />
+        <Header breadcrumbPaths={breadcrumbPaths} />
         <Col span={24} className="ms-30">
           <div>
             <span className="title__text">Quản lý thiết bị</span>

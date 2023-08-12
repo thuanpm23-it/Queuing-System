@@ -1,0 +1,35 @@
+.service__textarea {
+  resize: none !important;
+  height: 132.5px !important;
+}
+
+.checkbox__custom {
+  border-radius: 4px;
+  border: 1.5px solid var(--blue, #4277ff);
+  background: #fff;
+  width: 20px;
+  height: 20px;
+}
+
+.number__box {
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-gray-100, #d4d4d7);
+  background: var(--white, #fff);
+  width: 61px;
+  height: 44px;
+  color: var(--gray-gray-400-text, #535261);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.number__text {
+  color: var(--gray-gray-500, #282739);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}

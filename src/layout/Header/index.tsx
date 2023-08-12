@@ -3,11 +3,15 @@ import { Col } from "antd";
 import "../Header/style.css";
 import Img7 from "../../assets/images/notification.svg";
 import Img8 from "../../assets/images/profile__img.jpg";
+import Breadcrumb from "../../components/Breadcrums";
 
-const Header = () => {
+interface HeaderProps {
+  breadcrumbPaths: Array<{ label: string; link?: string }>;
+}
+const Header: React.FC<HeaderProps> = ({ breadcrumbPaths }) => {
   return (
     <Col span={24} className="top__wrapper d-flex">
-      <div className="readcrumb">Thông tin cá nhân</div>
+      <Breadcrumb paths={breadcrumbPaths} />
       <div className="d-flex items-center">
         <div className="notification__box">
           <img src={Img7} alt="Notification" />

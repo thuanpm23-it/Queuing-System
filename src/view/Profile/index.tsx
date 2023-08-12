@@ -6,16 +6,20 @@ import MenuPage from "../../layout/Menu";
 import Header from "../../layout/Header";
 
 const Profile = () => {
+  const userDataString = localStorage.getItem("userData");
+  const userData = userDataString ? JSON.parse(userDataString) : null;
+
+  const breadcrumbPaths = [{ label: "Thông tin người dùng" }];
   return (
     <Row className="main__wrapper">
       <MenuPage />
       <Col span={20} className="main__bg">
-        <Header />
+        <Header breadcrumbPaths={breadcrumbPaths} />
         <Row>
           <div className="profile__main__box ms-30 d-flex content-center">
             <div className="text-center">
               <img src={Img8} alt="Profile" className="profile__img" />
-              <p className="profile__name mt-15">Lê Quỳnh Ái Vân</p>
+              <p className="profile__name mt-15">{userData.fullName}</p>
             </div>
             <div className="ms-20">
               <div className="profile__box">
@@ -23,21 +27,25 @@ const Profile = () => {
                 <br />
                 <Input
                   className="profile__input"
-                  value="Lê Quỳnh Ái Vân"
+                  value={userData.fullName}
                   disabled
                 />
               </div>
               <div className="profile__box mt-20">
                 <label className="profile__label">Số diện thoại</label>
                 <br />
-                <Input className="profile__input" value="0767375921" disabled />
+                <Input
+                  className="profile__input"
+                  value={userData.phoneNumber}
+                  disabled
+                />
               </div>
               <div className="profile__box mt-20">
                 <label className="profile__label">Email</label>
                 <br />
                 <Input
                   className="profile__input"
-                  value="adminSSO1@domain.com"
+                  value={userData.email}
                   disabled
                 />
               </div>
@@ -48,19 +56,27 @@ const Profile = () => {
                 <br />
                 <Input
                   className="profile__input"
-                  value="lequynhaivan01"
+                  value={userData.username}
                   disabled
                 />
               </div>
               <div className="profile__box mt-20">
                 <label className="profile__label">Mật khẩu</label>
                 <br />
-                <Input className="profile__input" value="311940211" disabled />
+                <Input
+                  className="profile__input"
+                  value={userData.password}
+                  disabled
+                />
               </div>
               <div className="profile__box mt-20">
                 <label className="profile__label">Vai trò</label>
                 <br />
-                <Input className="profile__input" value="Kế toán" disabled />
+                <Input
+                  className="profile__input"
+                  value={userData.role}
+                  disabled
+                />
               </div>
             </div>
           </div>

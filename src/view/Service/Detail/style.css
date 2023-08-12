@@ -1,0 +1,51 @@
+.service__detail__border {
+  width: 370px;
+  height: 606px;
+  border-radius: 12px;
+  background: var(--white, #fff);
+  box-shadow: 2px 2px 8px 0px rgba(232, 239, 244, 0.8);
+}
+
+.w-718 {
+  width: 718px;
+}
+
+.update__border {
+  top: 45px;
+  border-radius: 8px 0px 0px 0px;
+}
+
+.back__border {
+  top: 140px;
+  border-radius: 0px 0px 0px 8px;
+  border-top: 1px solid #ffe3cd;
+  box-shadow: none;
+}
+
+.w-669 {
+  width: 669px;
+}
+.h-441 {
+  height: 441px;
+}
+
+.w-160 {
+  width: 160px;
+}
+
+.w-130 {
+  width: 130px;
+}
+
+.w-200 {
+  width: 200px;
+}
+
+.search__icon__service {
+  right: 185px;
+  top: 95px;
+}
+
+.me-30 {
+  margin-right: 30px;
+}

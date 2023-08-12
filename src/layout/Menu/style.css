@@ -1,11 +1,16 @@
-.nav__text {
+.menu__text {
   color: var(--gray-gray-300, #7e7d88);
   font-family: Nunito;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  display: flex !important;
-  align-items: center;
-  padding: 25px 0;
+  padding: 16px 12px 16px 10px;
+  text-decoration: none;
+}
+
+.menu__text.active {
+  background: var(--orange-orange-500, #ff7506) !important;
+  color: var(--white, #fff);
+  padding: 16px 12px 16px 10px;
 }
