@@ -134,3 +134,32 @@ tr:nth-child(even) {
 .pagination div:hover:not(.active) {
   background-color: #ddd;
 }
+
+.show__more {
+  color: var(--blue, #4277ff);
+  font-family: Nunito;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px;
+  text-decoration-line: underline;
+  cursor: pointer;
+}
+
+.select__custom {
+  display: inline-block;
+  position: relative;
+}
+
+select:first-child + .select-icon {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+}
+select:not(selector) + .select-icon {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%) rotate(180deg);
+}

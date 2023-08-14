@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../view/Signup/Login";
 import NewPassword from "../view/Signup/NewPassword";
 import ForgotPassword from "./../view/Signup/ForgotPassword/index";
@@ -29,6 +29,7 @@ const Routers = () => {
   return (
     <>
       <Routes>
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/newpassword" element={<NewPassword />} />
@@ -39,8 +40,8 @@ const Routers = () => {
 
         <Route path="/device" element={<DeviceList />} />
         <Route path="/device/add" element={<DeviceAdd />} />
-        <Route path="/device/detail" element={<DeviceDetail />} />
-        <Route path="/device/update" element={<DeviceUpdate />} />
+        <Route path="/device/detail/:id" element={<DeviceDetail />} />
+        <Route path="/device/update/:id" element={<DeviceUpdate />} />
 
         <Route path="/service" element={<ServiceList />} />
         <Route path="/service/add" element={<ServiceAdd />} />

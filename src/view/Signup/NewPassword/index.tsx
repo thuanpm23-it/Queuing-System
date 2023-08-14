@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import { db } from "../../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 interface RootState {
   forgot: {
@@ -22,6 +23,9 @@ interface RootState {
 const NewPassword = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const navigate = useNavigate();
+
   const forgotEmail = useSelector((state: RootState) => state.forgot.email);
 
   const handleChangePassword = async () => {
@@ -38,6 +42,7 @@ const NewPassword = () => {
           await updateDoc(userDocRef, { password: newPassword });
 
           console.log("Mật khẩu đã được thay đổi.");
+          navigate("/");
         } else {
           console.log("Địa chỉ email không tồn tại trong hệ thống.");
         }
@@ -46,6 +51,7 @@ const NewPassword = () => {
       }
     } else {
       console.log("Mật khẩu mới và xác nhận mật khẩu không khớp hoặc rỗng.");
+      setLoginError("Mật khẩu mới và xác nhận mật khẩu không khớp");
     }
   };
   return (
@@ -63,6 +69,7 @@ const NewPassword = () => {
                 className="login__input"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                status={loginError ? "error" : ""}
               />
             </div>
             <div className="login__box mt-10">
@@ -71,8 +78,58 @@ const NewPassword = () => {
                 className="login__input"
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
+                status={loginError ? "error" : ""}
               />
             </div>
+            {loginError && (
+              <p className="login__error d-flex mt-10">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="21"
+                    height="21"
+                    viewBox="0 0 21 21"
+                    fill="none"
+                  >
+                    <g clip-path="url(#clip0_83731_3505)">
+                      <path
+                        d="M10.228 18.8327C14.8304 18.8327 18.5613 15.1017 18.5613 10.4993C18.5613 5.89698 14.8304 2.16602 10.228 2.16602C5.62561 2.16602 1.89465 5.89698 1.89465 10.4993C1.89465 15.1017 5.62561 18.8327 10.228 18.8327Z"
+                        stroke="#E73F3F"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M10.228 13.834H10.2364"
+                        stroke="#E73F3F"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M10.228 7.16602V10.4993"
+                        stroke="#E73F3F"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_83731_3505">
+                        <rect
+                          width="20"
+                          height="20"
+                          fill="white"
+                          transform="translate(0.228027 0.5)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </div>
+                <div className="ms-5">{loginError}</div>
+              </p>
+            )}
+
             <button
               className="login__button button mt-30 ms-120"
               onClick={handleChangePassword}
