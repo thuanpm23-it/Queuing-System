@@ -68,7 +68,6 @@ const accountSlice = createSlice({
 
 export default accountSlice.reducer;
 
-// Selector to get account data
 export const selectAccountData = (state: RootState) =>
   state.account.accountData;
 

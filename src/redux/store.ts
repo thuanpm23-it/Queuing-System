@@ -3,12 +3,16 @@ import { useDispatch } from "react-redux";
 import accountReducer from "./slice/Account/accountSlice";
 import forgotReducer from "./slice/ForgotPassword/forgotSlice";
 import roleReducer from "./slice/Role/slice";
+import numberReducer from "./slice/Number/saveNumberSlice";
+import deviceReducer from "./slice/Device/deviceSlice";
 
 const store = configureStore({
   reducer: {
     forgot: forgotReducer,
     account: accountReducer,
     role: roleReducer,
+    number: numberReducer,
+    device: deviceReducer,
   },
 });
 

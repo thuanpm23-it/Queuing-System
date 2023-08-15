@@ -134,17 +134,41 @@ const DeviceUpdate = () => {
                     Loại thiết bị: <span className="text-danger">*</span>
                   </label>
                   <br />
-                  <Input
-                    className="device__add__input mt-5"
-                    placeholder="Chọn loại thiết bị"
-                    value={deviceInfo.deviceType}
-                    onChange={(e) =>
-                      setDeviceInfo((prevData) => ({
-                        ...prevData,
-                        deviceType: e.target.value,
-                      }))
-                    }
-                  />
+                  <div className="select__custom">
+                    <select
+                      className="device__add__input mt-5"
+                      placeholder="Chọn loại thiết bị"
+                      value={deviceInfo.deviceType}
+                      onChange={(e) =>
+                        setDeviceInfo((prevData) => ({
+                          ...prevData,
+                          deviceType: e.target.value,
+                        }))
+                      }
+                    >
+                      <option value="">Chọn loại thiết bị</option>
+                      <option value="Kiosk">Kiosk</option>
+                      <option value="Display counter">Display counter</option>
+                    </select>
+                    <div className="select-icon">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                      >
+                        <path d="M6 9L12 15L18 9" fill="#FF7506" />
+                        <path
+                          d="M6 9L12 15L18 9H6Z"
+                          stroke="#FF7506"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
                 <div className="device__add__box mt-15">
                   <label className="device__add__label">

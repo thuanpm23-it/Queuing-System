@@ -46,11 +46,11 @@ const Routers = () => {
         <Route path="/service" element={<ServiceList />} />
         <Route path="/service/add" element={<ServiceAdd />} />
         <Route path="/service/update/:id" element={<ServiceUpdate />} />
-        <Route path="/service/detail" element={<ServiceDetail />} />
+        <Route path="/service/detail/:id" element={<ServiceDetail />} />
 
         <Route path="/numberallocaiton" element={<NumberList />} />
         <Route path="/numberallocaiton/add" element={<NumberAdd />} />
-        <Route path="/numberallocaiton/detail" element={<NumberDetail />} />
+        <Route path="/numberallocaiton/detail/:id" element={<NumberDetail />} />
 
         <Route path="/report" element={<ReportList />} />
 

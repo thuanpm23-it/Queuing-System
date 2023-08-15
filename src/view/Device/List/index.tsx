@@ -5,13 +5,16 @@ import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import SearchIcon from "../../../assets/images/fi_search.svg";
 import AddIcon from "../../../assets/images/add-square.svg";
-import { CaretRightOutlined, CaretLeftOutlined } from "@ant-design/icons";
-import { DocumentData, collection, getDocs } from "firebase/firestore";
-import { db } from "../../../config/firebase";
 import { Link } from "react-router-dom";
 import Pagination from "../../../components/Pagination/Pagination";
 import usePagination from "../../../components/Pagination/Use";
 import { ITEMS_PER_PAGE } from "../../../components/Pagination/Contants";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchdeviceData,
+  selectdeviceData,
+} from "../../../redux/slice/Device/deviceSlice";
 
 const DeviceList = () => {
   const breadcrumbPaths = [
@@ -19,32 +22,39 @@ const DeviceList = () => {
     { label: "Danh sách thiết bị" },
   ];
 
-  const [deviceData, setDeviceData] = useState<DocumentData[]>([]);
+  // const [deviceData, setDeviceData] = useState<DocumentData[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedActive, setSelectedActive] = useState("");
   const [selectedConnect, setSelectedConnect] = useState("");
   const [showFullService, setShowFullService] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
+
+  const deviceData = useSelector(selectdeviceData);
+
+  useEffect(() => {
+    dispatch(fetchdeviceData());
+  }, [dispatch]);
 
   const handleToggleService = () => {
     setShowFullService(!showFullService);
   };
 
-  useEffect(() => {
-    const fetchDeviceData = async () => {
-      try {
-        const deviceRef = collection(db, "devices");
-        const snapshot = await getDocs(deviceRef);
-        const deviceData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setDeviceData(deviceData);
-      } catch (error) {
-        console.log("Có lỗi xảy ra", error);
-      }
-    };
-    fetchDeviceData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchDeviceData = async () => {
+  //     try {
+  //       const deviceRef = collection(db, "devices");
+  //       const snapshot = await getDocs(deviceRef);
+  //       const deviceData = snapshot.docs.map((doc) => ({
+  //         id: doc.id,
+  //         ...doc.data(),
+  //       }));
+  //       setDeviceData(deviceData);
+  //     } catch (error) {
+  //       console.log("Có lỗi xảy ra", error);
+  //     }
+  //   };
+  //   fetchDeviceData();
+  // }, []);
 
   const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
     usePagination(deviceData.length, ITEMS_PER_PAGE);

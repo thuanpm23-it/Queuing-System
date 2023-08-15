@@ -120,3 +120,13 @@
 select {
   appearance: none;
 }
+
+.device__list__select,
+select > option {
+  color: var(--gray-blue-gray-5-text, #535261);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}

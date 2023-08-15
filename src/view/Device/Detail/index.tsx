@@ -7,6 +7,12 @@ import UpdateIcon from "../../../assets/images/Edit Square.svg";
 import { DocumentData, collection, doc, getDoc } from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { useParams } from "react-router-dom";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchdeviceDetail,
+  selectdeviceDetail,
+} from "../../../redux/slice/Device/deviceSlice";
 
 const DeviceDetail = () => {
   const breadcrumbPaths = [
@@ -16,32 +22,42 @@ const DeviceDetail = () => {
   ];
   const { id } = useParams();
 
-  const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
-    deviceCode: "",
-    deviceName: "",
-    ipAddress: "",
-    deviceType: "",
-    username: "",
-    password: "",
-    service: "",
-  });
+  // const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
+  //   deviceCode: "",
+  //   deviceName: "",
+  //   ipAddress: "",
+  //   deviceType: "",
+  //   username: "",
+  //   password: "",
+  //   service: "",
+  // });
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const deviceData = useSelector(selectdeviceDetail);
 
   useEffect(() => {
-    const fetchDevice = async () => {
-      try {
-        const deviceRef = doc(collection(db, "devices"), id);
-        const deviceSnapshot = await getDoc(deviceRef);
-        if (deviceSnapshot.exists()) {
-          const data = deviceSnapshot.data();
-          setDeviceInfo(data);
-        }
-      } catch (error) {
-        console.error("Error fetching account:", error);
-      }
-    };
+    if (id) {
+      dispatch(fetchdeviceDetail(id));
+    }
+  }, [dispatch, id]);
 
-    fetchDevice();
-  }, [id]);
+  // useEffect(() => {
+  //   const fetchDevice = async () => {
+  //     try {
+  //       const deviceRef = doc(collection(db, "devices"), id);
+  //       const deviceSnapshot = await getDoc(deviceRef);
+  //       if (deviceSnapshot.exists()) {
+  //         const data = deviceSnapshot.data();
+  //         setDeviceInfo(data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching account:", error);
+  //     }
+  //   };
+
+  //   fetchDevice();
+  // }, [id]);
 
   return (
     <Row className="main__wrapper">
@@ -59,19 +75,19 @@ const DeviceDetail = () => {
                 <div>
                   <span className="detail__text__1">Mã thiết bị:</span>
                   <span className="detail__text__2 ms-89">
-                    {deviceInfo.deviceCode}
+                    {deviceData?.deviceCode}
                   </span>
                 </div>
                 <div className="mt-20">
                   <span className="detail__text__1">Tên thiết bị:</span>
                   <span className="detail__text__2 ms-85">
-                    {deviceInfo.deviceName}
+                    {deviceData?.deviceName}
                   </span>
                 </div>
                 <div className="mt-20">
                   <span className="detail__text__1">Địa chỉ IP:</span>
                   <span className="detail__text__2 ms-98">
-                    {deviceInfo.ipAddress}
+                    {deviceData?.ipAddress}
                   </span>
                 </div>
               </div>
@@ -79,19 +95,19 @@ const DeviceDetail = () => {
                 <div>
                   <span className="detail__text__1">Loại thiết bị:</span>
                   <span className="detail__text__2 ms-107">
-                    {deviceInfo.deviceType}
+                    {deviceData?.deviceType}
                   </span>
                 </div>
                 <div className="mt-20">
                   <span className="detail__text__1">Tên đăng nhập:</span>
                   <span className="detail__text__2 ms-85">
-                    {deviceInfo.username}
+                    {deviceData?.username}
                   </span>
                 </div>
                 <div className="mt-20">
                   <span className="detail__text__1">Mật khẩu:</span>
                   <span className="detail__text__2 ms-125">
-                    {deviceInfo.password}
+                    {deviceData?.password}
                   </span>
                 </div>
               </div>
@@ -99,7 +115,7 @@ const DeviceDetail = () => {
             <div className="ms-15 mt-20">
               <span className="detail__text__1">Dịch vụ sử dụng:</span>
               <br />
-              <p className="detail__text__2 mt-5">{deviceInfo.service}</p>
+              <p className="detail__text__2 mt-5">{deviceData?.service}</p>
             </div>
           </div>
           <div className="add__border">
