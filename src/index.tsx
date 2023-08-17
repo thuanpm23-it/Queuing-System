@@ -5,6 +5,7 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 import "antd/dist/reset.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "react-datepicker/dist/react-datepicker.css";
 import App from "./App";
 
 const root = ReactDOM.createRoot(

@@ -8,6 +8,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { setEmailForgot } from "../../../redux/slice/ForgotPassword/forgotSlice";
 import { db } from "../../../config/firebase";
+import { Link } from "react-router-dom";
 
 const ForgotPassowrd = () => {
   const [email, setEmail] = useState("");
@@ -16,6 +17,10 @@ const ForgotPassowrd = () => {
   const dispatch = useDispatch();
 
   const handleForgotPassword = async () => {
+    if (!email) {
+      setLoginError("Vui lòng điền thông tin");
+      return;
+    }
     try {
       const usersRef = collection(db, "users");
       const emailQuery = query(usersRef, where("email", "==", email));
@@ -106,7 +111,9 @@ const ForgotPassowrd = () => {
             )}
 
             <div className="reset__button__box mt-45">
-              <button className="reset__button button">Hủy</button>
+              <Link to="/" className="link">
+                <button className="reset__button button">Hủy</button>
+              </Link>
               <button
                 className="login__button button ms-20"
                 onClick={handleForgotPassword}

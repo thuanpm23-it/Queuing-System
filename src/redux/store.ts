@@ -5,6 +5,8 @@ import forgotReducer from "./slice/ForgotPassword/forgotSlice";
 import roleReducer from "./slice/Role/slice";
 import numberReducer from "./slice/Number/saveNumberSlice";
 import deviceReducer from "./slice/Device/deviceSlice";
+import serviceReducer from "./slice/Service/serviceSlice";
+import thunkMiddleware from "redux-thunk";
 
 const store = configureStore({
   reducer: {
@@ -13,7 +15,10 @@ const store = configureStore({
     role: roleReducer,
     number: numberReducer,
     device: deviceReducer,
+    service: serviceReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(thunkMiddleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

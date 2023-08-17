@@ -5,74 +5,24 @@ import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import SearchIcon from "../../../assets/images/fi_search.svg";
 import AddIcon from "../../../assets/images/add-square.svg";
-import { CaretRightOutlined, CaretLeftOutlined } from "@ant-design/icons";
+import { CaretRightOutlined } from "@ant-design/icons";
 import usePagination from "../../../components/Pagination/Use";
 import { ITEMS_PER_PAGE } from "../../../components/Pagination/Contants";
-import { DocumentData, collection, getDocs } from "firebase/firestore";
-import { db } from "../../../config/firebase";
 import Pagination from "../../../components/Pagination/Pagination";
 import { Link } from "react-router-dom";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchserviceData,
+  selectserviceData,
+} from "../../../redux/slice/Service/serviceSlice";
+import {
+  fetchnumberData,
+  selectnumberData,
+} from "../../../redux/slice/Number/saveNumberSlice";
 
 const NumberList = () => {
   const breadcrumbPaths = [{ label: "Cấp số" }, { label: "Danh sách cấp số" }];
-  const [numberData, setNumberData] = useState<DocumentData[]>([]);
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [selectedService, setSelectedService] = useState("");
-  const [selectedSupply, setSelectedSupply] = useState("");
-  const [selectedActive, setSelectedActive] = useState("");
-  const [serviceData, setServiceData] = useState<DocumentData[]>([]);
-
-  useEffect(() => {
-    const fetchServiceData = async () => {
-      try {
-        const serviceRef = collection(db, "services");
-        const snapshot = await getDocs(serviceRef);
-        const serviceData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setServiceData(serviceData);
-      } catch (error) {
-        console.log("Có lỗi xảy ra", error);
-      }
-    };
-    fetchServiceData();
-  }, []);
-
-  useEffect(() => {
-    const fetchNumberData = async () => {
-      try {
-        const numberRef = collection(db, "numbers");
-        const snapshot = await getDocs(numberRef);
-        const numberData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setNumberData(numberData);
-      } catch (error) {
-        console.log("Có lỗi xảy ra", error);
-      }
-    };
-    fetchNumberData();
-  }, []);
-
-  const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
-    usePagination(numberData.length, ITEMS_PER_PAGE);
-
-  const handleSearch = (keyword: any) => {
-    setSearchKeyword(keyword);
-    handlePageChange(1);
-  };
-
-  const filteredData = numberData.filter(
-    (data) =>
-      data.name.toLowerCase().includes(searchKeyword.toLowerCase()) &&
-      (selectedActive === "" || data.active === selectedActive) &&
-      (selectedService === "" || data.serviceName === selectedService) &&
-      (selectedSupply === "" || data.supply === selectedSupply)
-  );
-
-  const currentNumberData = filteredData.slice(startIndex, endIndex);
 
   return (
     <Row className="main__wrapper">
@@ -95,7 +45,7 @@ const NumberList = () => {
                 >
                   <option value="">Tất cả</option>
                   {serviceData.map((data) => (
-                    <option value={data.serviceName}>{data.serviceName}</option>
+                    <option value={data.id}>{data.serviceName}</option>
                   ))}
                 </select>
                 <div className="select-icon">
@@ -226,7 +176,13 @@ const NumberList = () => {
                   <tr key={index}>
                     <td>{data.number}</td>
                     <td>{data.name}</td>
-                    <td>{data.serviceName}</td>
+                    <td>
+                      {
+                        serviceData.find(
+                          (service) => service.id === data.serviceId
+                        )?.serviceName
+                      }
+                    </td>
                     <td>
                       {data.startTime} - {data.startDate}
                     </td>
@@ -280,12 +236,14 @@ const NumberList = () => {
                 ))}
               </tbody>
             </table>
-            <div className="add__border">
-              <img src={AddIcon} alt="Add Icon" />
-              <p className="add__text">
-                Thêm <br /> số mới
-              </p>
-            </div>
+            <Link to="/numberallocaiton/add">
+              <div className="add__border">
+                <img src={AddIcon} alt="Add Icon" />
+                <p className="add__text">
+                  Thêm <br /> số mới
+                </p>
+              </div>
+            </Link>
           </div>
           <Pagination
             currentPage={currentPage}

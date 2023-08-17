@@ -4,15 +4,16 @@ import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import TextArea from "antd/es/input/TextArea";
-import {
-  DocumentData,
-  collection,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { DocumentData, collection, doc, updateDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import { db } from "../../../config/firebase";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchserviceDetail,
+  selectserviceDetail,
+} from "../../../redux/slice/Service/serviceSlice";
+import { Link } from "react-router-dom";
 
 const ServiceUpdate = () => {
   const breadcrumbPaths = [
@@ -23,33 +24,23 @@ const ServiceUpdate = () => {
   ];
   const { id } = useParams();
 
-  const [serviceInfo, setServiceInfo] = useState<DocumentData>({
-    serviceCode: "",
-    serviceName: "",
-    serviceDescription: "",
-    active: "Hoạt động",
-    autoIncrement: false,
-    hasPrefix: false,
-    hasSuffix: false,
-    resetDaily: false,
-  });
+  const [serviceInfo, setServiceInfo] = useState<DocumentData>({});
+
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    const fetchService = async () => {
-      try {
-        const serviceRef = doc(collection(db, "services"), id);
-        const serviceSnapshot = await getDoc(serviceRef);
-        if (serviceSnapshot.exists()) {
-          const data = serviceSnapshot.data();
-          setServiceInfo(data);
-        }
-      } catch (error) {
-        console.error("Error fetching account:", error);
-      }
-    };
+    if (id) {
+      dispatch(fetchserviceDetail(id));
+    }
+  }, [dispatch, id]);
 
-    fetchService();
-  }, [id]);
+  const serviceData = useSelector(selectserviceDetail);
+
+  useEffect(() => {
+    if (serviceData) {
+      setServiceInfo(serviceData);
+    }
+  }, [serviceData]);
 
   const handleUpdateService = async () => {
     try {
@@ -134,12 +125,6 @@ const ServiceUpdate = () => {
                   className="checkbox__custom"
                   type="checkbox"
                   checked={serviceInfo.autoIncrement}
-                  onChange={(e) =>
-                    setServiceInfo((prevData) => ({
-                      ...prevData,
-                      autoIncrement: e.target.checked,
-                    }))
-                  }
                 />
                 <div className="ms-10 d-flex items-center">
                   <div className="number__text">Tăng tự động từ:</div>
@@ -214,7 +199,9 @@ const ServiceUpdate = () => {
           </div>
 
           <div className="d-flex ms-410 mt-30">
-            <button className="cancel__button button">Hủy bỏ</button>
+            <Link to="/service" className="link">
+              <button className="cancel__button button">Hủy bỏ</button>
+            </Link>
             <button
               className="add__button button ms-20"
               onClick={handleUpdateService}

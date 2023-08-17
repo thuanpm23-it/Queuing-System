@@ -6,12 +6,16 @@ import SearchIcon from "../../../assets/images/fi_search.svg";
 import AddIcon from "../../../assets/images/add-square.svg";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Col, Input, Row } from "antd";
-import { DocumentData, collection, getDocs } from "firebase/firestore";
 import usePagination from "../../../components/Pagination/Use";
 import { ITEMS_PER_PAGE } from "../../../components/Pagination/Contants";
-import { db } from "../../../config/firebase";
 import { Link } from "react-router-dom";
 import Pagination from "../../../components/Pagination/Pagination";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchserviceData,
+  selectserviceData,
+} from "../../../redux/slice/Service/serviceSlice";
 
 const ServiceList = () => {
   const breadcrumbPaths = [
@@ -19,26 +23,16 @@ const ServiceList = () => {
     { label: "Danh sách dịch vụ" },
   ];
 
-  const [serviceData, setServiceData] = useState<DocumentData[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedActive, setSelectedActive] = useState("");
 
+  const dispatch: AppDispatch = useDispatch();
+
+  const serviceData = useSelector(selectserviceData);
+
   useEffect(() => {
-    const fetchServiceData = async () => {
-      try {
-        const serviceRef = collection(db, "services");
-        const snapshot = await getDocs(serviceRef);
-        const serviceData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setServiceData(serviceData);
-      } catch (error) {
-        console.log("Có lỗi xảy ra", error);
-      }
-    };
-    fetchServiceData();
-  }, []);
+    dispatch(fetchserviceData());
+  }, [dispatch]);
 
   const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
     usePagination(serviceData.length, ITEMS_PER_PAGE);
@@ -177,12 +171,15 @@ const ServiceList = () => {
                 ))}
               </tbody>
             </table>
-            <div className="add__border">
-              <img src={AddIcon} alt="Add Icon" />
-              <p className="add__text">
-                Thêm <br /> dịch vụ
-              </p>
-            </div>
+            <Link to="/service/add">
+              <div className="add__border">
+                <img src={AddIcon} alt="Add Icon" />
+                <p className="add__text">
+                  Thêm
+                  <br /> Dịch vụ
+                </p>
+              </div>
+            </Link>
           </div>
           <Pagination
             currentPage={currentPage}

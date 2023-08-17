@@ -33,7 +33,7 @@ export const fetchdeviceData = createAsyncThunk(
 );
 
 export const fetchdeviceDetail = createAsyncThunk(
-  "device/fetcheviceDetail",
+  "device/fetchdeviceDetail",
   async (id: string) => {
     try {
       const deviceRef = doc(collection(db, "devices"), id);

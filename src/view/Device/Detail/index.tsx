@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import "../Detail/style.css";
 import { Row, Col } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import UpdateIcon from "../../../assets/images/Edit Square.svg";
-import { DocumentData, collection, doc, getDoc } from "firebase/firestore";
-import { db } from "../../../config/firebase";
 import { useParams } from "react-router-dom";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,6 +11,7 @@ import {
   fetchdeviceDetail,
   selectdeviceDetail,
 } from "../../../redux/slice/Device/deviceSlice";
+import { Link } from "react-router-dom";
 
 const DeviceDetail = () => {
   const breadcrumbPaths = [
@@ -21,16 +20,6 @@ const DeviceDetail = () => {
     { label: "Chi tiết thiết bị" },
   ];
   const { id } = useParams();
-
-  // const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
-  //   deviceCode: "",
-  //   deviceName: "",
-  //   ipAddress: "",
-  //   deviceType: "",
-  //   username: "",
-  //   password: "",
-  //   service: "",
-  // });
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -41,23 +30,6 @@ const DeviceDetail = () => {
       dispatch(fetchdeviceDetail(id));
     }
   }, [dispatch, id]);
-
-  // useEffect(() => {
-  //   const fetchDevice = async () => {
-  //     try {
-  //       const deviceRef = doc(collection(db, "devices"), id);
-  //       const deviceSnapshot = await getDoc(deviceRef);
-  //       if (deviceSnapshot.exists()) {
-  //         const data = deviceSnapshot.data();
-  //         setDeviceInfo(data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching account:", error);
-  //     }
-  //   };
-
-  //   fetchDevice();
-  // }, [id]);
 
   return (
     <Row className="main__wrapper">
@@ -118,13 +90,16 @@ const DeviceDetail = () => {
               <p className="detail__text__2 mt-5">{deviceData?.service}</p>
             </div>
           </div>
-          <div className="add__border">
-            <img src={UpdateIcon} alt="Add Icon" />
-            <p className="add__text">
-              Cập nhật
-              <br /> thiết bị
-            </p>
-          </div>
+
+          <Link to={`/device/update/${id}`}>
+            <div className="add__border">
+              <img src={UpdateIcon} alt="Add Icon" />
+              <p className="add__text">
+                Cập nhật
+                <br /> thiết bị
+              </p>
+            </div>
+          </Link>
         </Col>
       </Col>
     </Row>

@@ -15,6 +15,10 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!username || !password) {
+      setLoginError("Vui lòng điền thông tin");
+      return;
+    }
     try {
       const usersRef = collection(db, "users");
       const q = query(

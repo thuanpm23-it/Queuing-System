@@ -12,6 +12,37 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  const displayPages = () => {
+    const displayCount = 5;
+    const halfDisplayCount = Math.floor(displayCount / 2);
+
+    if (totalPages <= displayCount) {
+      return Array.from({ length: totalPages }, (_, index) => index + 1);
+    }
+
+    if (currentPage <= halfDisplayCount) {
+      return Array.from({ length: displayCount }, (_, index) => index + 1);
+    }
+
+    if (currentPage >= totalPages - halfDisplayCount) {
+      const pages = [];
+      for (let i = totalPages - displayCount + 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+      return pages;
+    }
+
+    const pages = [];
+    for (
+      let i = currentPage - halfDisplayCount;
+      i <= currentPage + halfDisplayCount;
+      i++
+    ) {
+      pages.push(i);
+    }
+    return pages;
+  };
+
   return (
     <div className="pagination mt-15">
       {totalPages > 1 && (
@@ -19,13 +50,13 @@ const Pagination: React.FC<PaginationProps> = ({
           <div onClick={() => onPageChange(currentPage - 1)}>
             <CaretLeftOutlined />
           </div>
-          {Array.from({ length: totalPages }, (_, index) => (
+          {displayPages().map((pageNum, index) => (
             <div
               key={index}
-              className={currentPage === index + 1 ? "active" : ""}
-              onClick={() => onPageChange(index + 1)}
+              className={currentPage === pageNum ? "active" : ""}
+              onClick={() => onPageChange(pageNum)}
             >
-              {index + 1}
+              {pageNum}
             </div>
           ))}
           <div onClick={() => onPageChange(currentPage + 1)}>

@@ -22,7 +22,6 @@ const DeviceList = () => {
     { label: "Danh sách thiết bị" },
   ];
 
-  // const [deviceData, setDeviceData] = useState<DocumentData[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedActive, setSelectedActive] = useState("");
   const [selectedConnect, setSelectedConnect] = useState("");
@@ -38,23 +37,6 @@ const DeviceList = () => {
   const handleToggleService = () => {
     setShowFullService(!showFullService);
   };
-
-  // useEffect(() => {
-  //   const fetchDeviceData = async () => {
-  //     try {
-  //       const deviceRef = collection(db, "devices");
-  //       const snapshot = await getDocs(deviceRef);
-  //       const deviceData = snapshot.docs.map((doc) => ({
-  //         id: doc.id,
-  //         ...doc.data(),
-  //       }));
-  //       setDeviceData(deviceData);
-  //     } catch (error) {
-  //       console.log("Có lỗi xảy ra", error);
-  //     }
-  //   };
-  //   fetchDeviceData();
-  // }, []);
 
   const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
     usePagination(deviceData.length, ITEMS_PER_PAGE);

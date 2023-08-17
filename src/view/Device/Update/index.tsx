@@ -4,15 +4,16 @@ import { Col, Input } from "antd";
 import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
-import {
-  DocumentData,
-  collection,
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { DocumentData, collection, doc, updateDoc } from "firebase/firestore";
 import { useParams } from "react-router-dom";
 import { db } from "../../../config/firebase";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchdeviceDetail,
+  selectdeviceDetail,
+} from "../../../redux/slice/Device/deviceSlice";
+import { Link } from "react-router-dom";
 
 const DeviceUpdate = () => {
   const breadcrumbPaths = [
@@ -23,34 +24,23 @@ const DeviceUpdate = () => {
 
   const { id } = useParams();
 
-  const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
-    deviceCode: "",
-    deviceName: "",
-    ipAddress: "",
-    deviceType: "",
-    username: "",
-    password: "",
-    service: "",
-    active: "Ngưng hoạt động",
-    connect: "Kết nối",
-  });
+  const [deviceInfo, setDeviceInfo] = useState<DocumentData>({});
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const deviceData = useSelector(selectdeviceDetail);
 
   useEffect(() => {
-    const fetchDevice = async () => {
-      try {
-        const deviceRef = doc(collection(db, "devices"), id);
-        const deviceSnapshot = await getDoc(deviceRef);
-        if (deviceSnapshot.exists()) {
-          const data = deviceSnapshot.data();
-          setDeviceInfo(data);
-        }
-      } catch (error) {
-        console.error("Error fetching account:", error);
-      }
-    };
+    if (id) {
+      dispatch(fetchdeviceDetail(id));
+    }
+  }, [dispatch, id]);
 
-    fetchDevice();
-  }, [id]);
+  useEffect(() => {
+    if (deviceData) {
+      setDeviceInfo(deviceData);
+    }
+  }, [deviceData]);
 
   const handleUpdateDevice = async () => {
     try {
@@ -230,7 +220,9 @@ const DeviceUpdate = () => {
           </div>
 
           <div className="d-flex ms-410 mt-30">
-            <button className="cancel__button button">Hủy bỏ</button>
+            <Link to="/device" className="link">
+              <button className="cancel__button button">Hủy bỏ</button>
+            </Link>
             <button
               className="add__button button ms-20"
               onClick={handleUpdateDevice}

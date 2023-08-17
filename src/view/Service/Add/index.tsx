@@ -7,6 +7,8 @@ import Header from "../../../layout/Header";
 import TextArea from "antd/es/input/TextArea";
 import { DocumentData, addDoc, collection } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import { Link } from "react-router-dom";
+import { format } from "date-fns";
 
 const ServiceAdd = () => {
   const breadcrumbPaths = [
@@ -15,17 +17,11 @@ const ServiceAdd = () => {
     { label: "Thêm dịch vụ" },
   ];
 
-  const currentDate = new Date();
-  const formattedDate = `${currentDate.getDate()}/${
-    currentDate.getMonth() + 1
-  }/${currentDate.getFullYear()}`;
+  const formattedDate = format(new Date(), "dd/MM/yyyy");
 
   const [serviceInfo, setServiceInfo] = useState<DocumentData>({
-    serviceCode: "",
-    serviceName: "",
-    serviceDescription: "",
     active: "Hoạt động",
-    autoIncrement: false,
+    autoIncrement: true,
     hasPrefix: false,
     hasSuffix: false,
     resetDaily: false,
@@ -120,12 +116,6 @@ const ServiceAdd = () => {
                   className="checkbox__custom"
                   type="checkbox"
                   checked={serviceInfo.autoIncrement}
-                  onChange={(e) =>
-                    setServiceInfo((prevData) => ({
-                      ...prevData,
-                      autoIncrement: e.target.checked,
-                    }))
-                  }
                 />
                 <div className="ms-10 d-flex items-center">
                   <div className="number__text">Tăng tự động từ:</div>
@@ -200,7 +190,9 @@ const ServiceAdd = () => {
           </div>
 
           <div className="d-flex ms-410 mt-30">
-            <button className="cancel__button button">Hủy bỏ</button>
+            <Link to="/service" className="link">
+              <button className="cancel__button button">Hủy bỏ</button>
+            </Link>
             <button
               className="add__button button ms-20"
               onClick={handleAddService}

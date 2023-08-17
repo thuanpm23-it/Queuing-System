@@ -6,6 +6,7 @@ import Header from "./../../layout/Header/index";
 import Breadcrumb from "../../components/Breadcrums";
 import Img7 from "../../assets/images/notification.svg";
 import Img8 from "../../assets/images/profile__img.jpg";
+import User from "../../components/User";
 
 const Dashboard = () => {
   const breadcrumbPaths = [{ label: "Dashboard" }];
@@ -210,17 +211,7 @@ const Dashboard = () => {
           </Col>
           <Col span={7} className="dashboard__right">
             <div className="d-flex items-center mt-15 ms-80">
-              <div className="notification__box">
-                <img src={Img7} alt="Notification" />
-              </div>
-              <div className="ms-20">
-                <img src={Img8} alt="Profile" className="profile__img__icon" />
-              </div>
-              <div className="ms-10">
-                <span className="profile__text__1">Xin chào</span>
-                <br />
-                <span className="profile__text__2">Lê Quỳnh Ái Vân</span>
-              </div>
+              <User />
             </div>
           </Col>
         </Row>

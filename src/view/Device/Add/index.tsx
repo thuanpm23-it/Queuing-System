@@ -6,6 +6,7 @@ import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import { DocumentData, addDoc, collection } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import { Link } from "react-router-dom";
 
 const DeviceAdd = () => {
   const breadcrumbPaths = [
@@ -15,13 +16,6 @@ const DeviceAdd = () => {
   ];
 
   const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
-    deviceCode: "",
-    deviceName: "",
-    ipAddress: "",
-    deviceType: "",
-    username: "",
-    password: "",
-    service: "",
     active: "Ngưng hoạt động",
     connect: "Kết nối",
   });
@@ -208,7 +202,10 @@ const DeviceAdd = () => {
           </div>
 
           <div className="d-flex ms-410 mt-30">
-            <button className="cancel__button button">Hủy bỏ</button>
+            <Link to="/device" className="link">
+              <button className="cancel__button button">Hủy bỏ</button>
+            </Link>
+
             <button
               className="add__button button ms-20"
               onClick={handleAddDevice}

@@ -7,21 +7,20 @@ import Header from "../../../layout/Header";
 import UpdateIcon from "../../../assets/images/Edit Square.svg";
 import BackIcon from "../../../assets/images/back-square.svg";
 import SearchIcon from "../../../assets/images/fi_search.svg";
-import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
-import {
-  DocumentData,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { CaretRightOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import { db } from "../../../config/firebase";
 import usePagination from "../../../components/Pagination/Use";
 import { ITEMS_PER_PAGE } from "../../../components/Pagination/Contants";
 import Pagination from "../../../components/Pagination/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchNumbersList,
+  fetchserviceDetail,
+  selectNumbersList,
+  selectserviceDetail,
+} from "./../../../redux/slice/Service/serviceSlice";
+import { AppDispatch } from "../../../redux/store";
+import { Link } from "react-router-dom";
 
 const ServiceDetail = () => {
   const breadcrumbPaths = [
@@ -31,54 +30,19 @@ const ServiceDetail = () => {
   ];
 
   const { id } = useParams();
-  const [numbersList, setNumbersList] = useState<DocumentData[]>([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedActive, setSelectedActive] = useState("");
-  const [serviceInfo, setServiceInfo] = useState<DocumentData>({});
-
-  // useEffect(() => {
-  //   const fetchService = async () => {
-  //     try {
-  //       const serviceRef = doc(collection(db, "services"), id);
-  //       const serviceSnapshot = await getDoc(serviceRef);
-  //       if (serviceSnapshot.exists()) {
-  //         const data = serviceSnapshot.data();
-  //         setServiceInfo(data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching account:", error);
-  //     }
-  //   };
-
-  //   fetchService();
-  // }, [id]);
+  const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    const fetchNumbersList = async () => {
-      try {
-        const serviceRef = doc(collection(db, "services"), id);
-        const serviceSnapshot = await getDoc(serviceRef);
-        const serviceData = serviceSnapshot.data();
-        if (serviceData) {
-          setServiceInfo(serviceData);
-          const numbersQuerySnapshot = await getDocs(
-            query(
-              collection(db, "numbers"),
-              where("serviceName", "==", serviceData.serviceName)
-            )
-          );
-          const numbersList = numbersQuerySnapshot.docs.map((doc) =>
-            doc.data()
-          );
-          setNumbersList(numbersList);
-        }
-      } catch (error) {
-        console.error("Error fetching numbers list:", error);
-      }
-    };
+    if (id) {
+      dispatch(fetchserviceDetail(id));
+      dispatch(fetchNumbersList(id));
+    }
+  }, [dispatch, id]);
 
-    fetchNumbersList();
-  }, [id]);
+  const numbersList = useSelector(selectNumbersList);
+  const serviceInfo = useSelector(selectserviceDetail);
 
   const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
     usePagination(numbersList.length, ITEMS_PER_PAGE);
@@ -112,24 +76,24 @@ const ServiceDetail = () => {
                 <div>
                   <div className="device__add__box">
                     <label className="device__add__label">
-                      Mã dịch vụ: {serviceInfo.serviceCode}
+                      Mã dịch vụ: {serviceInfo?.serviceCode}
                     </label>
                   </div>
                   <div className="device__add__box mt-15">
                     <label className="device__add__label">
-                      Tên dịch vụ: {serviceInfo.serviceName}
+                      Tên dịch vụ: {serviceInfo?.serviceName}
                     </label>
                   </div>
                   <div className="device__add__box mt-15">
                     <label className="device__add__label">
-                      Mô tả: {serviceInfo.serviceDescription}
+                      Mô tả: {serviceInfo?.serviceDescription}
                     </label>
                   </div>
                 </div>
               </div>
               <div className="mt-15 ms-15">
                 <p className="add__title">Quy tắc cấp số</p>
-                {serviceInfo.autoIncrement && (
+                {serviceInfo?.autoIncrement && (
                   <div className="d-flex items-center">
                     <div className="d-flex items-center">
                       <div className="number__text">Tăng tự động từ:</div>
@@ -143,7 +107,7 @@ const ServiceDetail = () => {
                     </div>
                   </div>
                 )}
-                {serviceInfo.hasPrefix && (
+                {serviceInfo?.hasPrefix && (
                   <div className="d-flex items-center mt-10">
                     <div className="d-flex items-center">
                       <div className="number__text">Prefix:</div>
@@ -153,7 +117,7 @@ const ServiceDetail = () => {
                     </div>
                   </div>
                 )}
-                {serviceInfo.hasSuffix && (
+                {serviceInfo?.hasSuffix && (
                   <div className="d-flex items-center mt-10">
                     <div className="d-flex items-center">
                       <div className="number__text">Surfix:</div>
@@ -163,7 +127,7 @@ const ServiceDetail = () => {
                     </div>
                   </div>
                 )}
-                {serviceInfo.resetDaily && (
+                {serviceInfo?.resetDaily && (
                   <div className="d-flex items-center mt-15">
                     <div className="d-flex items-center">
                       <div className="number__text">Reset mỗi ngày</div>
@@ -295,17 +259,20 @@ const ServiceDetail = () => {
               />
             </div>
           </div>
-          <div className="update__border">
-            <img src={UpdateIcon} alt="Add Icon" />
-            <p className="add__text">
-              Cập nhật <br /> danh sách
-            </p>
-          </div>
-
-          <div className="back__border">
-            <img src={BackIcon} alt="Add Icon" />
-            <p className="add__text">Quay lại</p>
-          </div>
+          <Link to={`/service/update/${id}`}>
+            <div className="update__border">
+              <img src={UpdateIcon} alt="Add Icon" />
+              <p className="add__text">
+                Cập nhật <br /> danh sách
+              </p>
+            </div>
+          </Link>
+          <Link to="/service">
+            <div className="back__border">
+              <img src={BackIcon} alt="Add Icon" />
+              <p className="add__text">Quay lại</p>
+            </div>
+          </Link>
         </Col>
       </Col>
     </Row>

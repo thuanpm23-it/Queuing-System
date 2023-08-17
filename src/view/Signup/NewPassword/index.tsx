@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../NewPassword/style.css";
 import AltaLogo from "../../../assets/images/Logo alta.png";
 import ResetImg from "../../../assets/images/Frame.png";
-import { Input, Row, Col } from "antd";
+import { Input, Row, Col, Modal } from "antd";
 import {
   collection,
   doc,
@@ -42,6 +42,7 @@ const NewPassword = () => {
           await updateDoc(userDocRef, { password: newPassword });
 
           console.log("Mật khẩu đã được thay đổi.");
+          Modal.success({ content: "Mật khẩu đã được thay đổi thành công." });
           navigate("/");
         } else {
           console.log("Địa chỉ email không tồn tại trong hệ thống.");
