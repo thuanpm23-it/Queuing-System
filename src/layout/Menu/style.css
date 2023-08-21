@@ -1,16 +1,81 @@
 .menu__text {
   color: var(--gray-gray-300, #7e7d88);
   font-family: Nunito;
-  font-size: 16px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
-  padding: 16px 12px 16px 10px;
+  padding: 16px 12px 16px 25px;
   text-decoration: none;
 }
 
 .menu__text.active {
   background: var(--orange-orange-500, #ff7506) !important;
   color: var(--white, #fff);
-  padding: 16px 12px 16px 10px;
+  padding: 16px 12px 16px 25px;
+}
+
+.menu__text:hover {
+  background: #fff2e7;
+  color: #ff7506;
+}
+
+.logout {
+  display: flex;
+  width: 200px;
+  padding: 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: 8px;
+  background: var(--orange-orange-50, #fff2e7);
+  color: var(--orange-orange-500, #ff7506);
+  font-family: Nunito;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  position: absolute;
+  bottom: 40px;
+  left: 25px;
+  cursor: pointer;
+}
+
+.navigation,
+.navigation li,
+.navigation ul {
+  list-style: none;
+}
+
+.navigation ul {
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0px;
+  z-index: 520;
+  width: 100%;
+}
+
+.navigation li:hover > ul {
+  visibility: visible;
+}
+.navigation ul {
+  top: 0;
+  left: 85%;
+}
+
+.navigation .a__text {
+  display: block;
+}
+
+.a__text {
+  background: #fff;
+}
+.navigation li {
+  position: relative;
+}
+.menu__t:after {
+  content: "⋮";
+  position: absolute;
+  right: 1em;
 }

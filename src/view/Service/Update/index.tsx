@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Col, Input } from "antd";
+import { Col, Input, Modal } from "antd";
 import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import TextArea from "antd/es/input/TextArea";
-import { DocumentData, collection, doc, updateDoc } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+import {
+  DocumentData,
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../config/firebase";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +20,12 @@ import {
   selectserviceDetail,
 } from "../../../redux/slice/Service/serviceSlice";
 import { Link } from "react-router-dom";
+import { format } from "date-fns";
+import {
+  fetchUserIPAsync,
+  selectUserIP,
+} from "../../../redux/slice/UserLog/userlogSlice";
+import UserDataUtil from "../../../components/UserData";
 
 const ServiceUpdate = () => {
   const breadcrumbPaths = [
@@ -24,9 +36,16 @@ const ServiceUpdate = () => {
   ];
   const { id } = useParams();
 
-  const [serviceInfo, setServiceInfo] = useState<DocumentData>({});
+  const [serviceInfo, setServiceInfo] = useState<DocumentData>({
+    serviceCode: "",
+    serviceName: "",
+    serviceDescription: "",
+  });
 
   const dispatch: AppDispatch = useDispatch();
+  const navigate = useNavigate();
+  const userIP = useSelector(selectUserIP);
+  const userData = UserDataUtil();
 
   useEffect(() => {
     if (id) {
@@ -42,12 +61,32 @@ const ServiceUpdate = () => {
     }
   }, [serviceData]);
 
+  useEffect(() => {
+    dispatch(fetchUserIPAsync());
+  }, [dispatch]);
+
   const handleUpdateService = async () => {
     try {
+      for (const key in serviceInfo) {
+        if (serviceInfo[key] === "") {
+          Modal.error({ content: "Vui lòng điền đầy đủ thông tin." });
+          return;
+        }
+      }
       const serviceCollectionRef = collection(db, "services");
       const serviceRef = doc(serviceCollectionRef, id);
       await updateDoc(serviceRef, serviceInfo);
-      console.log("Service updated successfully");
+      Modal.success({ content: "Cập nhật dịch vụ thành công!" });
+      const userLogDocRef = collection(db, "userlogs");
+      const logInfo = {
+        userId: userData.id,
+        time: format(new Date(new Date().getTime()), "HH:mm"),
+        date: format(new Date(), "yyyy-MM-dd"),
+        userIP: userIP,
+        comment: `Cập nhật dịch vụ ${serviceInfo.serviceCode}`,
+      };
+      await addDoc(userLogDocRef, logInfo);
+      navigate("/service");
     } catch (error) {
       console.error("Error updating account:", error);
     }

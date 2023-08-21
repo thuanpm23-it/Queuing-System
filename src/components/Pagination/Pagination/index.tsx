@@ -5,12 +5,14 @@ type PaginationProps = {
   currentPage: number;
   totalPages: number;
   onPageChange: (newPage: number) => void;
+  style?: React.CSSProperties;
 };
 
 const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
+  style,
 }) => {
   const displayPages = () => {
     const displayCount = 5;
@@ -44,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="pagination mt-15">
+    <div className="pagination mt-15" style={style}>
       {totalPages > 1 && (
         <>
           <div onClick={() => onPageChange(currentPage - 1)}>

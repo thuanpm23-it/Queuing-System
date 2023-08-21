@@ -21,6 +21,9 @@ import {
 } from "./../../../redux/slice/Service/serviceSlice";
 import { AppDispatch } from "../../../redux/store";
 import { Link } from "react-router-dom";
+import { Dayjs } from "dayjs";
+import CustomDatePicker from "../../../components/DatePicker";
+import CustomSearchInput from "../../../components/SearchBar";
 
 const ServiceDetail = () => {
   const breadcrumbPaths = [
@@ -43,6 +46,8 @@ const ServiceDetail = () => {
 
   const numbersList = useSelector(selectNumbersList);
   const serviceInfo = useSelector(selectserviceDetail);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
     usePagination(numbersList.length, ITEMS_PER_PAGE);
@@ -52,10 +57,28 @@ const ServiceDetail = () => {
     handlePageChange(1);
   };
 
+  const handleStartDateChange = (date: Dayjs | null) => {
+    const formattedDate = date ? date.format("YYYY-MM-DD") : "";
+    setStartDate(formattedDate);
+    handlePageChange(1);
+  };
+
+  const handleEndDateChange = (date: Dayjs | null) => {
+    const formattedDate = date ? date.format("YYYY-MM-DD") : "";
+    setEndDate(formattedDate);
+    handlePageChange(1);
+  };
+
   const filteredData = numbersList.filter(
     (data) =>
-      data.number.toLowerCase().includes(searchKeyword.toLowerCase()) &&
-      (selectedActive === "" || data.active === selectedActive)
+      (data.number.toLowerCase().includes(searchKeyword.toLowerCase()) &&
+        (selectedActive === "" || data.active === selectedActive) &&
+        startDate === "" &&
+        endDate === "") ||
+      (startDate &&
+        endDate &&
+        data.startDate >= startDate &&
+        data.endDate <= endDate)
   );
 
   const currentServiceData = filteredData.slice(startIndex, endIndex);
@@ -75,19 +98,20 @@ const ServiceDetail = () => {
               <div className="d-flex ms-15 mt-20">
                 <div>
                   <div className="device__add__box">
-                    <label className="device__add__label">
-                      Mã dịch vụ: {serviceInfo?.serviceCode}
-                    </label>
+                    <label className="device__add__label">Mã dịch vụ:</label>
+                    <span className="ms-30">{serviceInfo?.serviceCode}</span>
                   </div>
                   <div className="device__add__box mt-15">
-                    <label className="device__add__label">
-                      Tên dịch vụ: {serviceInfo?.serviceName}
-                    </label>
+                    <label className="device__add__label">Tên dịch vụ:</label>
+                    <span style={{ marginLeft: "25px" }}>
+                      {serviceInfo?.serviceName}
+                    </span>
                   </div>
                   <div className="device__add__box mt-15">
-                    <label className="device__add__label">
-                      Mô tả: {serviceInfo?.serviceDescription}
-                    </label>
+                    <label className="device__add__label">Mô tả:</label>
+                    <span style={{ marginLeft: "65px" }}>
+                      {serviceInfo?.serviceDescription}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -179,24 +203,27 @@ const ServiceDetail = () => {
                     </label>
                     <br />
                     <div className="d-flex items-center">
-                      <Input type="date" className="date__input w-130" />
+                      <CustomDatePicker
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        className="w-130"
+                      />
                       <CaretRightOutlined className="date__icon" />
-                      <Input type="date" className="date__input w-130" />
+                      <CustomDatePicker
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        startDate={startDate}
+                        className="w-130"
+                      />
                     </div>
                   </div>
                   <div className="device__list__box ms-15">
                     <label className="device__list__label">Từ khóa</label>
                     <br />
-                    <Input
-                      placeholder="Nhập từ khóa"
-                      className="device__list__select pe-35 w-200"
+                    <CustomSearchInput
+                      className="w-200"
                       value={searchKeyword}
                       onChange={(e) => handleSearch(e.target.value)}
-                    />
-                    <img
-                      src={SearchIcon}
-                      className="search__icon search__icon__service"
-                      alt=""
                     />
                   </div>
                 </div>
@@ -256,6 +283,7 @@ const ServiceDetail = () => {
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={handlePageChange}
+                style={{ marginRight: "30px" }}
               />
             </div>
           </div>

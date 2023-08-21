@@ -134,3 +134,76 @@ select > option {
 .link {
   text-decoration: none;
 }
+
+.device__list__select option {
+  background-color: #fff;
+}
+
+.device__list__select option::before {
+  content: "\00a0"; /* Thêm khoảng trống ảo */
+  padding: 5px; /* Chỉnh padding tùy ý */
+}
+.device__list__select option:hover {
+  background-color: #f0f0f0; /* Màu nền khi hover */
+  color: #333; /* Màu chữ khi hover */
+}
+
+.ant-picker-content thead {
+  background: #fff;
+}
+
+.ant-picker-content thead tr th {
+  color: var(--orange-orange-400, #ff9138) !important;
+  font-size: 14px !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  line-height: normal !important;
+}
+
+.ant-picker-body table {
+  font-family: "Nunito" !important;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--gray-gray-400-text, #535261) !important;
+  border-radius: 0px;
+}
+
+.ant-picker-content,
+.ant-picker-content tbody tr td,
+.ant-picker-content thead tr th {
+  border: none;
+  text-align: center;
+}
+
+.ant-picker-content tbody tr:nth-child(even) {
+  background: #fff;
+}
+
+:where(.css-dev-only-do-not-override-fpg3f5).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-today
+  .ant-picker-cell-inner::before {
+  border-color: #ff7506;
+}
+
+:where(.css-dev-only-do-not-override-fpg3f5).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-selected
+  .ant-picker-cell-inner,
+:where(.css-dev-only-do-not-override-fpg3f5).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-range-start
+  .ant-picker-cell-inner,
+:where(.css-dev-only-do-not-override-fpg3f5).ant-picker-dropdown
+  .ant-picker-cell-in-view.ant-picker-cell-range-end
+  .ant-picker-cell-inner {
+  color: #fff;
+  background: #ff7506;
+}
+
+.ant-picker-month-btn,
+.ant-picker-year-btn {
+  color: var(--orange-orange-500, #ff7506) !important;
+}
+
+.ant-picker-header-super-next-btn,
+.ant-picker-header-super-prev-btn {
+  display: none;
+}

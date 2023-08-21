@@ -16,6 +16,10 @@ import {
   fetchserviceData,
   selectserviceData,
 } from "../../../redux/slice/Service/serviceSlice";
+import { Dayjs } from "dayjs";
+import CustomDatePicker from "../../../components/DatePicker";
+import CustomSearchInput from "../../../components/SearchBar";
+import SelectCustom from "../../../components/Select";
 
 const ServiceList = () => {
   const breadcrumbPaths = [
@@ -25,6 +29,8 @@ const ServiceList = () => {
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedActive, setSelectedActive] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -42,13 +48,34 @@ const ServiceList = () => {
     handlePageChange(1);
   };
 
+  const handleStartDateChange = (date: Dayjs | null) => {
+    const formattedDate = date ? date.format("YYYY-MM-DD") : "";
+    setStartDate(formattedDate);
+    handlePageChange(1);
+  };
+
+  const handleEndDateChange = (date: Dayjs | null) => {
+    const formattedDate = date ? date.format("YYYY-MM-DD") : "";
+    setEndDate(formattedDate);
+    handlePageChange(1);
+  };
   const filteredData = serviceData.filter(
     (data) =>
       data.serviceName.toLowerCase().includes(searchKeyword.toLowerCase()) &&
-      (selectedActive === "" || data.active === selectedActive)
+      (selectedActive === "" || data.active === selectedActive) &&
+      ((startDate === "" && endDate === "") ||
+        (startDate &&
+          endDate &&
+          data.creationDate >= startDate &&
+          data.creationDate <= endDate))
   );
 
   const currentServiceData = filteredData.slice(startIndex, endIndex);
+  const activeOptions = [
+    { value: "", label: "Tất cả" },
+    { value: "Hoạt động", label: "Hoạt động" },
+    { value: "Ngưng hoạt động", label: "Ngưng hoạt động" },
+  ];
 
   return (
     <Row className="main__wrapper">
@@ -65,67 +92,47 @@ const ServiceList = () => {
                 Trạng thái hoạt động
               </label>
               <br />
-              <div className="select__custom">
-                <select
-                  className="device__list__select"
-                  value={selectedActive}
-                  onChange={(e) => setSelectedActive(e.target.value)}
-                >
-                  <option value="">Tất cả</option>
-                  <option value="Hoạt động">Hoạt động</option>
-                  <option value="Ngưng hoạt động">Ngưng hoạt động</option>
-                </select>
-                <div className="select-icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path d="M6 9L12 15L18 9" fill="#FF7506" />
-                    <path
-                      d="M6 9L12 15L18 9H6Z"
-                      stroke="#FF7506"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
+              <SelectCustom
+                selectedValue={selectedActive}
+                options={activeOptions}
+                onSelectChange={setSelectedActive}
+              />
             </div>
             <div className="device__list__box ms-20">
               <label className="device__list__label">Chọn thời gian</label>
               <br />
               <div className="d-flex items-center">
-                <Input type="date" className="date__input" />
+                <CustomDatePicker
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                />
                 <CaretRightOutlined className="date__icon" />
-                <Input type="date" className="date__input" />
+                <CustomDatePicker
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  startDate={startDate}
+                />
               </div>
             </div>
             <div className="device__list__box ms-190">
               <label className="device__list__label">Từ khóa</label>
               <br />
-              <Input
-                placeholder="Nhập từ khóa"
-                className="device__list__select pe-35"
+              <CustomSearchInput
                 value={searchKeyword}
                 onChange={(e) => handleSearch(e.target.value)}
               />
-              <img src={SearchIcon} className="search__icon" alt="" />
             </div>
           </div>
           <div>
             <table>
               <thead>
                 <tr>
-                  <th>Mã dịch vụ</th>
-                  <th>Tên dịch vụ</th>
+                  <th style={{ width: "100px" }}>Mã dịch vụ</th>
+                  <th style={{ width: "150px" }}>Tên dịch vụ</th>
                   <th>Mô tả</th>
-                  <th>Trạng hoạt động</th>
-                  <th></th>
-                  <th></th>
+                  <th style={{ width: "150px" }}>Trạng hoạt động</th>
+                  <th style={{ width: "100px" }}></th>
+                  <th style={{ width: "100px" }}></th>
                 </tr>
               </thead>
               <tbody>

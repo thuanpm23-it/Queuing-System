@@ -1,0 +1,17 @@
+/* .notification__box .notificantion__main {
+  visibility: hidden;
+  position: absolute;
+  top: 100%;
+  right: 200px;
+  z-index: 520;
+}
+
+.notification__box:hover .notificantion__main {
+  visibility: visible;
+}
+
+.notificantion__main {
+  background: red;
+  width: 100px;
+  height: 100px;
+} */

@@ -3,14 +3,13 @@
   border: 1.5px solid var(--gray-blue-gray-2-stroke, #d4d4d7);
   width: 143px;
   height: 44px;
-  padding: 8px 16px;
-  flex-shrink: 0;
   color: var(--gray-gray-200-placeholder, #a9a9b0);
   font-family: Nunito;
-  font-size: 14px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 24px;
+  padding-left: 35px;
 }
 
 .ms-5 {

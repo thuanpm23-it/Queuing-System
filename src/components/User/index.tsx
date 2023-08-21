@@ -1,27 +1,37 @@
 import React from "react";
 import Img7 from "../../assets/images/notification.svg";
-import Img8 from "../../assets/images/profile__img.jpg";
+import { Link } from "react-router-dom";
+import "../User/style.css";
+import UserDataUtil from "../UserData";
 
 const User = () => {
-  const userDataString = localStorage.getItem("userData");
-  const userData = userDataString ? JSON.parse(userDataString) : null;
+  const userData = UserDataUtil();
 
   return (
     <>
       <div className="notification__box">
         <img src={Img7} alt="Notification" />
+        <div className="notificantion__main"></div>
       </div>
       <div className="ms-20">
-        <img
-          src={userData.userImg}
-          alt="Profile"
-          className="profile__img__icon"
-        />
+        <Link to="/profile">
+          {userData.userImg ? (
+            <img
+              src={userData.userImg}
+              alt="Profile"
+              className="profile__img__icon"
+            />
+          ) : (
+            <div className="user__icon"></div>
+          )}
+        </Link>
       </div>
       <div className="ms-10">
         <span className="profile__text__1">Xin chào</span>
         <br />
-        <span className="profile__text__2">{userData.fullName}</span>
+        <Link to="/profile" className="link">
+          <span className="profile__text__2">{userData.fullName}</span>
+        </Link>
       </div>
     </>
   );

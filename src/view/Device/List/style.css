@@ -63,12 +63,6 @@ tr:nth-child(even) {
   line-height: 24px;
 }
 
-.search__icon {
-  position: absolute;
-  right: 150px;
-  top: 85px;
-}
-
 .ms-190 {
   margin-left: 190px;
 }
@@ -157,9 +151,20 @@ select:first-child + .select-icon {
   right: 8px;
   transform: translateY(-50%);
 }
-select:not(selector) + .select-icon {
+select:focus + .select-icon {
   position: absolute;
   top: 50%;
   right: 8px;
   transform: translateY(-50%) rotate(180deg);
+}
+
+.search__icon {
+  position: absolute;
+  top: 25%;
+  right: 8px;
+}
+
+.search__custom {
+  display: inline-block;
+  position: relative;
 }

@@ -15,6 +15,12 @@ import {
   fetchdeviceData,
   selectdeviceData,
 } from "../../../redux/slice/Device/deviceSlice";
+import {
+  fetchserviceData,
+  selectserviceData,
+} from "../../../redux/slice/Service/serviceSlice";
+import CustomSearchInput from "../../../components/SearchBar";
+import SelectCustom from "../../../components/Select";
 
 const DeviceList = () => {
   const breadcrumbPaths = [
@@ -25,17 +31,22 @@ const DeviceList = () => {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedActive, setSelectedActive] = useState("");
   const [selectedConnect, setSelectedConnect] = useState("");
-  const [showFullService, setShowFullService] = useState(false);
+  const [expandedDeviceId, setExpandedDeviceId] = useState("");
   const dispatch: AppDispatch = useDispatch();
-
   const deviceData = useSelector(selectdeviceData);
+  const serviceData = useSelector(selectserviceData);
 
   useEffect(() => {
     dispatch(fetchdeviceData());
+    dispatch(fetchserviceData());
   }, [dispatch]);
 
-  const handleToggleService = () => {
-    setShowFullService(!showFullService);
+  const handleToggleService = (deviceId: string) => {
+    if (expandedDeviceId === deviceId) {
+      setExpandedDeviceId("");
+    } else {
+      setExpandedDeviceId(deviceId);
+    }
   };
 
   const { currentPage, totalPages, startIndex, endIndex, handlePageChange } =
@@ -54,6 +65,18 @@ const DeviceList = () => {
   );
   const currentAccountData = filteredData.slice(startIndex, endIndex);
 
+  const options = [
+    { value: "", label: "Tất cả" },
+    { value: "Kết nối", label: "Kết nối" },
+    { value: "Mất kết nối", label: "Mất kết nối" },
+  ];
+
+  const activeOptions = [
+    { value: "", label: "Tất cả" },
+    { value: "Hoạt động", label: "Hoạt động" },
+    { value: "Ngưng hoạt động", label: "Ngưng hoạt động" },
+  ];
+
   return (
     <Row className="main__wrapper">
       <MenuPage />
@@ -69,79 +92,28 @@ const DeviceList = () => {
                 Trạng thái hoạt động
               </label>
               <br />
-              <div className="select__custom">
-                <select
-                  className="device__list__select"
-                  value={selectedActive}
-                  onChange={(e) => setSelectedActive(e.target.value)}
-                >
-                  <option value="">Tất cả</option>
-                  <option value="Hoạt động">Hoạt động</option>
-                  <option value="Ngưng hoạt động">Ngưng hoạt động</option>
-                </select>
-                <div className="select-icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path d="M6 9L12 15L18 9" fill="#FF7506" />
-                    <path
-                      d="M6 9L12 15L18 9H6Z"
-                      stroke="#FF7506"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
+              <SelectCustom
+                selectedValue={selectedActive}
+                options={activeOptions}
+                onSelectChange={setSelectedActive}
+              />
             </div>
             <div className="device__list__box ms-20">
               <label className="device__list__label">Trạng thái kết nối</label>
               <br />
-              <div className="select__custom">
-                <select
-                  className="device__list__select"
-                  value={selectedConnect}
-                  onChange={(e) => setSelectedConnect(e.target.value)}
-                >
-                  <option value="">Tất cả</option>
-                  <option value="Kết nối">Kết nối</option>
-                  <option value="Mất kết nối">Mất kết nối</option>
-                </select>
-                <div className="select-icon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path d="M6 9L12 15L18 9" fill="#FF7506" />
-                    <path
-                      d="M6 9L12 15L18 9H6Z"
-                      stroke="#FF7506"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              </div>
+              <SelectCustom
+                selectedValue={selectedConnect}
+                options={options}
+                onSelectChange={setSelectedConnect}
+              />
             </div>
             <div className="device__list__box ms-190">
               <label className="device__list__label">Từ khóa</label>
               <br />
-              <Input
-                placeholder="Nhập từ khóa"
-                className="device__list__select pe-35"
+              <CustomSearchInput
                 value={searchKeyword}
                 onChange={(e) => handleSearch(e.target.value)}
               />
-              <img src={SearchIcon} className="search__icon" alt="" />
             </div>
           </div>
           <div>
@@ -217,30 +189,55 @@ const DeviceList = () => {
                       <span className="ms-5">{data.connect}</span>
                     </td>
                     <td style={{ width: "280px" }}>
-                      {data.service.length > 30 && !showFullService ? (
+                      {data.service.length > 2 &&
+                      data.id === expandedDeviceId ? (
                         <>
-                          {data.service.substring(0, 30)} ...
+                          {data.service.map(
+                            (serviceId: string, index: number) => (
+                              <span key={serviceId}>
+                                {serviceData
+                                  .filter((service) => service.id === serviceId)
+                                  .map((service) => service.serviceName)}
+                                {index !== data.service.length - 1 && ", "}
+                              </span>
+                            )
+                          )}
                           <br />
                           <span
                             className="show__more"
-                            onClick={handleToggleService}
+                            onClick={() => handleToggleService(data.id)}
                           >
-                            Xem thêm
+                            Ẩn đi
                           </span>
                         </>
                       ) : (
-                        data.service
-                      )}
-                      <br />
-                      {showFullService && (
-                        <span
-                          className="show__more"
-                          onClick={handleToggleService}
-                        >
-                          Ẩn đi
-                        </span>
+                        <>
+                          {data.service
+                            .slice(0, 2)
+                            .map((serviceId: string, index: number) => (
+                              <span key={serviceId}>
+                                {serviceData
+                                  .filter((service) => service.id === serviceId)
+                                  .map((service) => service.serviceName)}
+                                {index !== data.service.length - 1 && ", "}
+                              </span>
+                            ))}
+                          {data.service.length > 2 && (
+                            <>
+                              {"..."}
+                              <br />
+                              <span
+                                className="show__more"
+                                onClick={() => handleToggleService(data.id)}
+                              >
+                                Xem thêm
+                              </span>
+                            </>
+                          )}
+                        </>
                       )}
                     </td>
+
                     <td>
                       <Link to={`/device/detail/${data.id}`}>Chi tiết</Link>
                     </td>
@@ -264,6 +261,7 @@ const DeviceList = () => {
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
+            style={{ marginTop: "45px" }}
           />
         </Col>
       </Col>

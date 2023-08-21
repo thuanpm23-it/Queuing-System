@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Add/style.css";
-import { Col, Input } from "antd";
+import { Col, Input, Modal } from "antd";
 import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import TextArea from "antd/es/input/TextArea";
 import { DocumentData, addDoc, collection } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
+import {
+  fetchUserIPAsync,
+  selectUserIP,
+} from "../../../redux/slice/UserLog/userlogSlice";
+import UserDataUtil from "../../../components/UserData";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../../redux/store";
 
 const ServiceAdd = () => {
   const breadcrumbPaths = [
@@ -17,9 +24,15 @@ const ServiceAdd = () => {
     { label: "Thêm dịch vụ" },
   ];
 
-  const formattedDate = format(new Date(), "dd/MM/yyyy");
-
+  const formattedDate = format(new Date(), "yyyy-MM-dd");
+  const navigate = useNavigate();
+  const userIP = useSelector(selectUserIP);
+  const userData = UserDataUtil();
+  const dispatch: AppDispatch = useDispatch();
   const [serviceInfo, setServiceInfo] = useState<DocumentData>({
+    serviceCode: "",
+    serviceName: "",
+    serviceDescription: "",
     active: "Hoạt động",
     autoIncrement: true,
     hasPrefix: false,
@@ -28,16 +41,31 @@ const ServiceAdd = () => {
     creationDate: formattedDate,
   });
 
+  useEffect(() => {
+    dispatch(fetchUserIPAsync());
+  }, [dispatch]);
+
   const handleAddService = async () => {
     try {
       for (const key in serviceInfo) {
         if (serviceInfo[key] === "") {
-          console.error("Vui lòng điền đầy đủ thông tin.");
+          Modal.error({ content: "Vui lòng điền đầy đủ thông tin." });
           return;
         }
       }
       const serviceDocRef = collection(db, "services");
       const docRef = await addDoc(serviceDocRef, serviceInfo);
+      Modal.success({ content: "Thêm dịch vụ thành công." });
+      const userLogDocRef = collection(db, "userlogs");
+      const logInfo = {
+        userId: userData.id,
+        time: format(new Date(new Date().getTime()), "HH:mm"),
+        date: format(new Date(), "yyyy-MM-dd"),
+        userIP: userIP,
+        comment: `Thêm dịch vụ ${serviceInfo.serviceCode}`,
+      };
+      await addDoc(userLogDocRef, logInfo);
+      navigate("/service");
       return docRef.id;
     } catch (error) {
       console.error("Lỗi khi tạo tài khoản:", error);

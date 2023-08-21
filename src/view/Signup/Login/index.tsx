@@ -31,7 +31,12 @@ const Login = () => {
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc) => {
           const user = doc.data();
-          localStorage.setItem("userData", JSON.stringify(user));
+          const userData = {
+            ...user,
+            id: doc.id,
+          };
+          localStorage.setItem("userData", JSON.stringify(userData));
+          localStorage.setItem("userID", doc.id);
           console.log("Login successful:", user);
           navigate("/profile");
         });

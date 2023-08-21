@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../Add/style.css";
-import { Col, Input } from "antd";
+import { Col, Input, Modal, Select } from "antd";
 import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import { DocumentData, addDoc, collection } from "firebase/firestore";
 import { db } from "../../../config/firebase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchserviceData,
+  selectserviceData,
+} from "../../../redux/slice/Service/serviceSlice";
+import UserDataUtil from "../../../components/UserData";
+import {
+  fetchUserIPAsync,
+  selectUserIP,
+} from "../../../redux/slice/UserLog/userlogSlice";
+import { format } from "date-fns";
 
 const DeviceAdd = () => {
   const breadcrumbPaths = [
@@ -15,24 +27,74 @@ const DeviceAdd = () => {
     { label: "Thêm thiết bị" },
   ];
 
+  const navigate = useNavigate();
+  const userData = UserDataUtil();
   const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
+    deviceCode: "",
+    deviceType: "",
+    deviceName: "",
+    username: "",
+    ipAddress: "",
+    password: "",
     active: "Ngưng hoạt động",
     connect: "Kết nối",
   });
+  const dispatch: AppDispatch = useDispatch();
+  const userIP = useSelector(selectUserIP);
+  const serviceData = useSelector(selectserviceData);
+
+  useEffect(() => {
+    dispatch(fetchserviceData());
+    dispatch(fetchUserIPAsync());
+  }, [dispatch]);
 
   const handleAddDevice = async () => {
     try {
       for (const key in deviceInfo) {
         if (deviceInfo[key] === "") {
-          console.error("Vui lòng điền đầy đủ thông tin.");
+          Modal.error({ content: "Vui lòng điền đầy đủ thông tin!" });
           return;
         }
       }
       const deviceDocRef = collection(db, "devices");
       const docRef = await addDoc(deviceDocRef, deviceInfo);
+      Modal.success({ content: "Thêm thiết bị thành công!" });
+      const userLogDocRef = collection(db, "userlogs");
+      const logInfo = {
+        userId: userData.id,
+        time: format(new Date(new Date().getTime()), "HH:mm"),
+        date: format(new Date(), "yyyy-MM-dd"),
+        userIP: userIP,
+        comment: `Thêm thiết bị ${deviceInfo.deviceCode}`,
+      };
+      await addDoc(userLogDocRef, logInfo);
+      navigate("/device");
       return docRef.id;
     } catch (error) {
       console.error("Lỗi khi tạo tài khoản:", error);
+    }
+  };
+
+  const options = [
+    { label: "Tất cả", value: "all" },
+    ...serviceData.map((data) => ({
+      label: data.serviceName,
+      value: data.id,
+    })),
+  ];
+
+  const handleSelectService = (value: string[]) => {
+    if (value.includes("all")) {
+      const allServices = options.slice(1).map((option) => option.value);
+      setDeviceInfo({
+        ...deviceInfo,
+        service: allServices,
+      });
+    } else {
+      setDeviceInfo({
+        ...deviceInfo,
+        service: value,
+      });
     }
   };
 
@@ -183,16 +245,15 @@ const DeviceAdd = () => {
                 Dịch vụ sử dụng: <span className="text-danger">*</span>
               </label>
               <br />
-              <Input
-                className="device__add__input w-100 mt-5"
-                placeholder="Nhập dịch vụ sử dụng"
+              <Select
+                mode="multiple"
+                style={{ width: 1100 }}
+                className="mt-5"
+                placeholder="Hãy chọn dịch vụ"
                 value={deviceInfo.service}
-                onChange={(e) =>
-                  setDeviceInfo((prevData) => ({
-                    ...prevData,
-                    service: e.target.value,
-                  }))
-                }
+                onChange={handleSelectService}
+                options={options}
+                suffixIcon={false}
               />
               <p className="required__text mt-15">
                 <strong className="text-danger">*</strong> Là trường thông tin

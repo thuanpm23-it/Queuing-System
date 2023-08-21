@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "../Update/style.css";
-import { Col, Input } from "antd";
+import { Col, Input, Modal, Select } from "antd";
 import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
-import { DocumentData, collection, doc, updateDoc } from "firebase/firestore";
-import { useParams } from "react-router-dom";
+import {
+  DocumentData,
+  addDoc,
+  collection,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../config/firebase";
 import { AppDispatch } from "../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +20,16 @@ import {
   selectdeviceDetail,
 } from "../../../redux/slice/Device/deviceSlice";
 import { Link } from "react-router-dom";
+import {
+  fetchserviceData,
+  selectserviceData,
+} from "../../../redux/slice/Service/serviceSlice";
+import {
+  fetchUserIPAsync,
+  selectUserIP,
+} from "../../../redux/slice/UserLog/userlogSlice";
+import UserDataUtil from "../../../components/UserData";
+import { format } from "date-fns";
 
 const DeviceUpdate = () => {
   const breadcrumbPaths = [
@@ -23,18 +39,29 @@ const DeviceUpdate = () => {
   ];
 
   const { id } = useParams();
-
-  const [deviceInfo, setDeviceInfo] = useState<DocumentData>({});
+  const [deviceInfo, setDeviceInfo] = useState<DocumentData>({
+    deviceCode: "",
+    deviceType: "",
+    deviceName: "",
+    username: "",
+    ipAddress: "",
+    password: "",
+  });
 
   const dispatch: AppDispatch = useDispatch();
-
   const deviceData = useSelector(selectdeviceDetail);
+  const userIP = useSelector(selectUserIP);
+  const userData = UserDataUtil();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
       dispatch(fetchdeviceDetail(id));
     }
   }, [dispatch, id]);
+  useEffect(() => {
+    dispatch(fetchUserIPAsync());
+  }, [dispatch]);
 
   useEffect(() => {
     if (deviceData) {
@@ -44,12 +71,57 @@ const DeviceUpdate = () => {
 
   const handleUpdateDevice = async () => {
     try {
+      for (const key in deviceInfo) {
+        if (deviceInfo[key] === "") {
+          Modal.error({ content: "Vui lòng điền đầy đủ thông tin!" });
+          return;
+        }
+      }
       const deviceCollectionRef = collection(db, "devices");
       const deviceRef = doc(deviceCollectionRef, id);
       await updateDoc(deviceRef, deviceInfo);
-      console.log("Account updated successfully");
+      Modal.success({ content: "Cập nhật thiết bị thành công!" });
+      const userLogDocRef = collection(db, "userlogs");
+      const logInfo = {
+        userId: userData.id,
+        time: format(new Date(new Date().getTime()), "HH:mm"),
+        date: format(new Date(), "yyyy-MM-dd"),
+        userIP: userIP,
+        comment: `Cập nhật thiết bị ${deviceInfo.deviceCode}`,
+      };
+      await addDoc(userLogDocRef, logInfo);
+      navigate("/device");
     } catch (error) {
       console.error("Error updating account:", error);
+    }
+  };
+
+  const serviceData = useSelector(selectserviceData);
+
+  useEffect(() => {
+    dispatch(fetchserviceData());
+  }, [dispatch]);
+
+  const options = [
+    { label: "Tất cả", value: "all" },
+    ...serviceData.map((data) => ({
+      label: data.serviceName,
+      value: data.id,
+    })),
+  ];
+
+  const handleSelectService = (value: string[]) => {
+    if (value.includes("all")) {
+      const allServices = options.slice(1).map((option) => option.value);
+      setDeviceInfo({
+        ...deviceInfo,
+        service: allServices,
+      });
+    } else {
+      setDeviceInfo({
+        ...deviceInfo,
+        service: value,
+      });
     }
   };
 
@@ -201,16 +273,13 @@ const DeviceUpdate = () => {
                 Dịch vụ sử dụng: <span className="text-danger">*</span>
               </label>
               <br />
-              <Input
-                className="device__add__input w-100 mt-5"
-                placeholder="Nhập dịch vụ sử dụng"
+              <Select
+                mode="multiple"
+                className="mt-5"
+                placeholder="Hãy chọn dịch vụ"
                 value={deviceInfo.service}
-                onChange={(e) =>
-                  setDeviceInfo((prevData) => ({
-                    ...prevData,
-                    service: e.target.value,
-                  }))
-                }
+                onChange={handleSelectService}
+                options={options}
               />
               <p className="required__text mt-15">
                 <strong className="text-danger">*</strong> Là trường thông tin

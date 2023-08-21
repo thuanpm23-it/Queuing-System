@@ -57,7 +57,9 @@
   line-height: 36px;
 }
 
-.ant-menu-item-selected {
-  background-color: #ff7506 !important;
-  color: #fff !important;
+.user {
+  width: 238px;
+  height: 238px;
+  border-radius: 50%;
+  background: #535261;
 }

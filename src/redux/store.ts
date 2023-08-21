@@ -6,6 +6,7 @@ import roleReducer from "./slice/Role/slice";
 import numberReducer from "./slice/Number/saveNumberSlice";
 import deviceReducer from "./slice/Device/deviceSlice";
 import serviceReducer from "./slice/Service/serviceSlice";
+import userlogReducer from "./slice/UserLog/userlogSlice";
 import thunkMiddleware from "redux-thunk";
 
 const store = configureStore({
@@ -16,6 +17,7 @@ const store = configureStore({
     number: numberReducer,
     device: deviceReducer,
     service: serviceReducer,
+    userlog: userlogReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(thunkMiddleware),

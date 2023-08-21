@@ -12,6 +12,10 @@ import {
   selectdeviceDetail,
 } from "../../../redux/slice/Device/deviceSlice";
 import { Link } from "react-router-dom";
+import {
+  fetchserviceData,
+  selectserviceData,
+} from "../../../redux/slice/Service/serviceSlice";
 
 const DeviceDetail = () => {
   const breadcrumbPaths = [
@@ -24,6 +28,12 @@ const DeviceDetail = () => {
   const dispatch: AppDispatch = useDispatch();
 
   const deviceData = useSelector(selectdeviceDetail);
+
+  const serviceData = useSelector(selectserviceData);
+
+  useEffect(() => {
+    dispatch(fetchserviceData());
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {
@@ -87,7 +97,16 @@ const DeviceDetail = () => {
             <div className="ms-15 mt-20">
               <span className="detail__text__1">Dịch vụ sử dụng:</span>
               <br />
-              <p className="detail__text__2 mt-5">{deviceData?.service}</p>
+              <p className="detail__text__2 mt-5">
+                {deviceData?.service.map((serviceId: string, index: number) => (
+                  <span key={serviceId}>
+                    {serviceData
+                      .filter((service) => service.id === serviceId)
+                      .map((service) => service.serviceName)}
+                    {index !== deviceData.service.length - 1 && ", "}
+                  </span>
+                ))}
+              </p>
             </div>
           </div>
 

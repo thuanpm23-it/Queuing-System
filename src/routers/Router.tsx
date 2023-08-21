@@ -54,15 +54,17 @@ const Routers = () => {
 
         <Route path="/report" element={<ReportList />} />
 
-        <Route path="/role" element={<RoleList />} />
-        <Route path="/role/add" element={<RoleAdd />} />
-        <Route path="/role/update/:id" element={<RoleUpdate />} />
+        <Route path="/setting" element={<Navigate to="/setting/role" />} />
 
-        <Route path="/account" element={<AccountList />} />
-        <Route path="/account/add" element={<AccountAdd />} />
-        <Route path="/account/update/:id" element={<AccountUpdate />} />
+        <Route path="/setting/role" element={<RoleList />} />
+        <Route path="/setting/role/add" element={<RoleAdd />} />
+        <Route path="/setting/role/update/:id" element={<RoleUpdate />} />
 
-        <Route path="/userlog" element={<UserLogList />} />
+        <Route path="/setting/account" element={<AccountList />} />
+        <Route path="/setting/account/add" element={<AccountAdd />} />
+        <Route path="/setting/account/update/:id" element={<AccountUpdate />} />
+
+        <Route path="/setting/userlog" element={<UserLogList />} />
       </Routes>
     </>
   );
