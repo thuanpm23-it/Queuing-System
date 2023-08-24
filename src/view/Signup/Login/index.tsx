@@ -36,7 +36,6 @@ const Login = () => {
             id: doc.id,
           };
           localStorage.setItem("userData", JSON.stringify(userData));
-          localStorage.setItem("userID", doc.id);
           console.log("Login successful:", user);
           navigate("/profile");
         });

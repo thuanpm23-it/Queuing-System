@@ -5,6 +5,7 @@ interface SelectCustomProps {
   options: { value: string; label: string }[];
   onSelectChange: (value: string) => void;
   selectClassName?: string;
+  style?: React.CSSProperties;
 }
 
 const SelectCustom: React.FC<SelectCustomProps> = ({
@@ -12,6 +13,7 @@ const SelectCustom: React.FC<SelectCustomProps> = ({
   options,
   onSelectChange,
   selectClassName,
+  style,
 }) => {
   return (
     <div className="select__custom">
@@ -19,6 +21,7 @@ const SelectCustom: React.FC<SelectCustomProps> = ({
         className={`device__list__select ${selectClassName}`}
         value={selectedValue}
         onChange={(e) => onSelectChange(e.target.value)}
+        style={style}
       >
         {options.map((option, index) => (
           <option key={index} value={option.value}>

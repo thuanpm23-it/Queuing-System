@@ -275,11 +275,13 @@ const DeviceUpdate = () => {
               <br />
               <Select
                 mode="multiple"
+                style={{ width: 1100 }}
                 className="mt-5"
                 placeholder="Hãy chọn dịch vụ"
                 value={deviceInfo.service}
                 onChange={handleSelectService}
                 options={options}
+                suffixIcon={false}
               />
               <p className="required__text mt-15">
                 <strong className="text-danger">*</strong> Là trường thông tin

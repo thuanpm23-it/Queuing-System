@@ -1,0 +1,14 @@
+.report__down {
+  top: 80px;
+}
+
+.date__custom {
+  display: inline-block;
+  position: relative;
+}
+
+.date__icon__1 {
+  position: absolute;
+  top: 20%;
+  left: 10px;
+}

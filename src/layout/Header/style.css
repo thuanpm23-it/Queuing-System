@@ -1,7 +1,7 @@
 .notification__box {
-  border-radius: 50%;
+  border-radius: 30px;
   background: #fff2e7;
-  padding: 5px;
+  padding: 5px 6px;
 }
 
 .profile__img__icon {

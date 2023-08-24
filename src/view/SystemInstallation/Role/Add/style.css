@@ -1,0 +1,24 @@
+.role__border {
+  width: 540px;
+  height: 410px;
+  border-radius: 8px;
+  background: var(--orange-orange-50, #fff2e7);
+}
+
+.role__text__1 {
+  color: var(--orange-orange-500, #ff7506);
+  font-family: Nunito;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
+}
+
+.role__text__2 {
+  color: var(--gray-gray-400-text, #535261);
+  font-family: Nunito;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
