@@ -9,12 +9,10 @@ import {
   addDoc,
   collection,
   doc,
-  getDoc,
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../../config/firebase";
 import { useNavigate, useParams } from "react-router-dom";
-import CheckBox from "../../../../components/Checkbox";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import {
@@ -24,6 +22,16 @@ import {
 import { AppDispatch } from "../../../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import UserDataUtil from "../../../../components/UserData";
+import { CheckboxValueType } from "antd/es/checkbox/Group";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { Checkbox } from "antd";
+import {
+  fetchRoleDetail,
+  selectRoleDetail,
+} from "../../../../redux/slice/Role/slice";
+
+const CheckboxGroup = Checkbox.Group;
+const plainOptions = ["Chức năng x", "Chức năng y", "Chức năng z"];
 
 const RoleUpdate = () => {
   const breadcrumbPaths = [
@@ -41,83 +49,24 @@ const RoleUpdate = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
   const userIP = useSelector(selectUserIP);
+  const RoleDetail = useSelector(selectRoleDetail);
   const userData1 = UserDataUtil();
-
-  const [selectedGroupA, setSelectedGroupA] = useState<string[]>([]);
-  const [selectedGroupB, setSelectedGroupB] = useState<string[]>([]);
-
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectAllB, setSelectAllB] = useState(false);
-  const [checkboxes, setCheckboxes] = useState([
-    { id: 1, label: "Checkbox 1", checked: false },
-    { id: 2, label: "Checkbox 2", checked: false },
-    { id: 3, label: "Checkbox 3", checked: false },
-  ]);
-  const [checkboxesB, setCheckboxesB] = useState([
-    { id: 1, label: "Checkbox 1", checked: false },
-    { id: 2, label: "Checkbox 2", checked: false },
-    { id: 3, label: "Checkbox 3", checked: false },
-  ]);
-
-  const handleCheckboxChange = (id: any) => {
-    const updatedCheckboxes = checkboxes.map((checkbox) =>
-      checkbox.id === id
-        ? { ...checkbox, checked: !checkbox.checked }
-        : checkbox
-    );
-    setCheckboxes(updatedCheckboxes);
-    setSelectAll(updatedCheckboxes.every((checkbox) => checkbox.checked));
-    const selectedValues = updatedCheckboxes
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.label);
-    setSelectedGroupA(selectedValues);
-  };
-
-  const handleCheckboxBChange = (id: any) => {
-    const updatedCheckboxesB = checkboxesB.map((checkbox) =>
-      checkbox.id === id
-        ? { ...checkbox, checked: !checkbox.checked }
-        : checkbox
-    );
-    setCheckboxesB(updatedCheckboxesB);
-    setSelectAllB(updatedCheckboxesB.every((checkbox) => checkbox.checked));
-
-    const selectedValuesB = updatedCheckboxesB
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.label);
-    setSelectedGroupB(selectedValuesB);
-  };
-
-  const handleSelectAllChange = () => {
-    const newSelectAll = !selectAll;
-    setSelectAll(newSelectAll);
-
-    const updatedCheckboxes = checkboxes.map((checkbox) => ({
-      ...checkbox,
-      checked: newSelectAll,
+  const [checkedLists, setCheckedLists] = useState({
+    groupA: [],
+    groupB: [],
+    groupC: [],
+  });
+  const onChange = (group: string, list: CheckboxValueType[]) => {
+    setCheckedLists((prevState) => ({
+      ...prevState,
+      [group]: list,
     }));
-    setCheckboxes(updatedCheckboxes);
-
-    const selectedValues = updatedCheckboxes
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.label);
-    setSelectedGroupA(selectedValues);
   };
-
-  const handleSelectAllBChange = () => {
-    const newSelectAllB = !selectAllB;
-    setSelectAllB(newSelectAllB);
-
-    const updatedCheckboxesB = checkboxesB.map((checkbox) => ({
-      ...checkbox,
-      checked: newSelectAllB,
+  const onCheckAllChange = (e: CheckboxChangeEvent, group: string) => {
+    setCheckedLists((prevState) => ({
+      ...prevState,
+      [group]: e.target.checked ? plainOptions : [],
     }));
-    setCheckboxesB(updatedCheckboxesB);
-
-    const selectedValuesB = updatedCheckboxesB
-      .filter((checkbox) => checkbox.checked)
-      .map((checkbox) => checkbox.label);
-    setSelectedGroupB(selectedValuesB);
   };
 
   const handleUpdateRole = async () => {
@@ -133,8 +82,9 @@ const RoleUpdate = () => {
       await updateDoc(roleRef, {
         roleName: roleData.roleName,
         roleDescription: roleData.roleDescription,
-        selectedGroupA,
-        selectedGroupB,
+        checkedListA: checkedLists.groupA,
+        checkedListB: checkedLists.groupB,
+        checkedListC: checkedLists.groupC,
       });
 
       console.log("Vai trò đã được cập nhật trong Firestore với ID:", id);
@@ -155,42 +105,29 @@ const RoleUpdate = () => {
   };
 
   useEffect(() => {
-    const getRoleFromFirestore = async () => {
-      try {
-        const roleCollection = collection(db, "roles");
-        const roleRef = doc(roleCollection, id);
-        const roleSnapshot = await getDoc(roleRef);
-        if (roleSnapshot.exists()) {
-          const data = roleSnapshot.data();
-          setRoleData(data);
-          setSelectedGroupA(data.selectedGroupA);
-          setSelectedGroupB(data.selectedGroupB);
-          const updatedCheckboxes = checkboxes.map((checkbox) => ({
-            ...checkbox,
-            checked: data.selectedGroupA.includes(checkbox.label),
-          }));
-          setCheckboxes(updatedCheckboxes);
-          setSelectAll(updatedCheckboxes.every((checkbox) => checkbox.checked));
-          const updatedCheckboxesB = checkboxesB.map((checkbox) => ({
-            ...checkbox,
-            checked: data.selectedGroupB.includes(checkbox.label),
-          }));
-          setCheckboxesB(updatedCheckboxesB);
-          setSelectAllB(
-            updatedCheckboxesB.every((checkbox) => checkbox.checked)
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching role:", error);
-      }
-    };
-
-    getRoleFromFirestore();
-  }, [id]);
-
-  useEffect(() => {
     dispatch(fetchUserIPAsync());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchRoleDetail(id));
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (RoleDetail) {
+      setRoleData({
+        roleName: RoleDetail.roleName,
+        roleDescription: RoleDetail.roleDescription,
+      });
+
+      setCheckedLists({
+        groupA: RoleDetail.checkedListA || [],
+        groupB: RoleDetail.checkedListB || [],
+        groupC: RoleDetail.checkedListC || [],
+      });
+    }
+  }, [RoleDetail]);
 
   return (
     <Row className="main__wrapper">
@@ -254,48 +191,73 @@ const RoleUpdate = () => {
                     <div className="ms-20">
                       <div>
                         <div className="role__text__1">Nhóm chức năng A</div>
-                        <div className="d-flex items-center mt-10">
-                          <CheckBox
-                            label="Tất cả"
-                            checked={selectAll}
-                            onChange={handleSelectAllChange}
+                        <div className="d-flex items-center">
+                          <Checkbox
+                            indeterminate={
+                              checkedLists.groupA.length > 0 &&
+                              checkedLists.groupA.length < plainOptions.length
+                            }
+                            onChange={(e) => onCheckAllChange(e, "groupA")}
+                            checked={
+                              checkedLists.groupA.length === plainOptions.length
+                            }
+                          >
+                            Tất cả
+                          </Checkbox>
+                        </div>
+                        <CheckboxGroup
+                          options={plainOptions}
+                          value={checkedLists.groupA}
+                          onChange={(list) => onChange("groupA", list)}
+                        />
+
+                        <div
+                          style={{ marginBottom: "15px", marginTop: "15px" }}
+                        >
+                          <div className="role__text__1">Nhóm chức năng B</div>
+                          <div className="d-flex items-center">
+                            <Checkbox
+                              indeterminate={
+                                checkedLists.groupB.length > 0 &&
+                                checkedLists.groupB.length < plainOptions.length
+                              }
+                              onChange={(e) => onCheckAllChange(e, "groupB")}
+                              checked={
+                                checkedLists.groupB.length ===
+                                plainOptions.length
+                              }
+                            >
+                              Tất cả
+                            </Checkbox>
+                          </div>
+                          <CheckboxGroup
+                            options={plainOptions}
+                            value={checkedLists.groupB}
+                            onChange={(list) => onChange("groupB", list)}
                           />
                         </div>
-                        {checkboxes.map((checkbox) => (
-                          <div
-                            key={checkbox.id}
-                            className="d-flex items-center mt-10"
-                          >
-                            <CheckBox
-                              label={checkbox.label}
-                              checked={checkbox.checked}
-                              onChange={() => handleCheckboxChange(checkbox.id)}
-                            />
-                          </div>
-                        ))}
-                        <div className="mt-20">
-                          <div className="role__text__1">Nhóm chức năng B</div>
-                          <div className="d-flex items-center mt-10">
-                            <CheckBox
-                              label="Select All (Group B)"
-                              checked={selectAllB}
-                              onChange={handleSelectAllBChange}
-                            />
-                          </div>
-                          {checkboxesB.map((checkbox) => (
-                            <div
-                              key={checkbox.id}
-                              className="d-flex items-center mt-10"
+                        <div style={{ marginBottom: "15px" }}>
+                          <div className="role__text__1">Nhóm chức năng C</div>
+                          <div className="d-flex items-center">
+                            <Checkbox
+                              indeterminate={
+                                checkedLists.groupC.length > 0 &&
+                                checkedLists.groupC.length < plainOptions.length
+                              }
+                              onChange={(e) => onCheckAllChange(e, "groupC")}
+                              checked={
+                                checkedLists.groupC.length ===
+                                plainOptions.length
+                              }
                             >
-                              <CheckBox
-                                label={checkbox.label}
-                                checked={checkbox.checked}
-                                onChange={() =>
-                                  handleCheckboxBChange(checkbox.id)
-                                }
-                              />
-                            </div>
-                          ))}
+                              Tất cả
+                            </Checkbox>
+                          </div>
+                          <CheckboxGroup
+                            options={plainOptions}
+                            value={checkedLists.groupC}
+                            onChange={(list) => onChange("groupC", list)}
+                          />
                         </div>
                       </div>
                     </div>
