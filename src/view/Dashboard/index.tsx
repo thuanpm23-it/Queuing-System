@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../Dashboard/style.css";
 import MenuPage from "../../layout/Menu";
-import { Col, Row } from "antd";
-import Header from "./../../layout/Header/index";
+import { CalendarProps, Col, Row } from "antd";
 import Breadcrumb from "../../components/Breadcrums";
-import Img7 from "../../assets/images/notification.svg";
-import Img8 from "../../assets/images/profile__img.jpg";
 import Img9 from "../../assets/images/Frame 625210 (1).png";
 import User from "../../components/User";
-import ReactApexChart from "react-apexcharts";
-import SelectCustom from "../../components/Select";
 import { AppDispatch } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -25,15 +20,25 @@ import {
   selectdeviceData,
 } from "../../redux/slice/Device/deviceSlice";
 import DatePicker from "react-datepicker";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import moment from "moment";
+import { Dayjs } from "dayjs";
+
+interface DataPoint {
+  name: string;
+  value: number;
+}
 
 const Dashboard = () => {
   const breadcrumbPaths = [{ label: "Dashboard" }];
-  const series = [
-    {
-      name: "Số thứ tự",
-      data: [2500, 4200, 4000, 3500, 3200, 4221, 3300, 4300, 3200],
-    },
-  ];
   const options = [
     {
       label: "Ngày",
@@ -86,7 +91,102 @@ const Dashboard = () => {
     (data) => data.active === "Ngưng hoạt động"
   ).length;
 
-  const [selected, setSelected] = useState("");
+  const dailyData: DataPoint[] = [
+    { name: "01", value: 45 },
+    { name: "", value: 60 },
+    { name: "13", value: 65 },
+    { name: "19", value: 70 },
+    { name: "", value: 55 },
+    { name: "31", value: 95 },
+  ];
+
+  const weeklyData: DataPoint[] = [
+    { name: "Tuần 1", value: 50 },
+    { name: "Tuần 2", value: 60 },
+    { name: "Tuần 3", value: 45 },
+    { name: "Tuần 4", value: 75 },
+  ];
+
+  const monthlyData: DataPoint[] = [
+    { name: "1", value: 20 },
+    { name: "2", value: 45 },
+    { name: "3", value: 28 },
+    { name: "4", value: 80 },
+    { name: "5", value: 60 },
+    { name: "6", value: 90 },
+    { name: "7", value: 20 },
+    { name: "8", value: 45 },
+    { name: "9", value: 28 },
+    { name: "10", value: 80 },
+    { name: "11", value: 60 },
+    { name: "12", value: 90 },
+  ];
+
+  // Convert DocumentData to DataPoint[]
+  // const convertedData: DataPoint[] = numberData.map((data: DocumentData) => {
+  //   return {
+  //     name: moment(data.startDate).format("DD"),
+  //     value: 1,
+  //   };
+  // });
+  // const dailyData: DataPoint[] = Array.from({ length: 31 }, (_, i) => ({
+  //   name: (i + 1).toString(),
+  //   value: convertedData.filter((data) => data.name === (i + 1).toString())
+  //     .length,
+  // })).map((dataPoint) => ({
+  //   ...dataPoint,
+  //   name: dataPoint.value > 0 ? dataPoint.name : "",
+  // }));
+
+  // const weeklyData: DataPoint[] = Array.from({ length: 4 }, (_, i) => {
+  //   const startOfWeek = moment().startOf("month").add(i, "weeks");
+  //   const endOfWeek = startOfWeek.clone().endOf("week");
+  //   const weekNumber = i + 1;
+
+  //   const value = convertedData.filter((data) =>
+  //     moment(data.name, "DD").isBetween(startOfWeek, endOfWeek, undefined, "[)")
+  //   ).length;
+
+  //   return {
+  //     name: `Tuần ${weekNumber}`,
+  //     value: value,
+  //   };
+  // });
+
+  // const monthlyData: DataPoint[] = Array.from({ length: 12 }, (_, i) => {
+  //   const monthIndex = i;
+  //   const monthName = moment().month(monthIndex).format("M");
+
+  //   const value = convertedData.filter(
+  //     (data) => moment(data.name, "DD").month() === monthIndex
+  //   ).length;
+
+  //   return {
+  //     name: monthName,
+  //     value: value,
+  //   };
+  // });
+  const [selectedOption, setSelectedOption] = useState("tháng");
+
+  const getFilteredData = () => {
+    switch (selectedOption) {
+      case "ngày":
+        return dailyData;
+      case "tuần":
+        return weeklyData;
+      case "tháng":
+        return monthlyData;
+      default:
+        return [];
+    }
+  };
+
+  const filteredData = getFilteredData();
+  const handleDateChange = (date: any) => {
+    // Xử lý khi ngày được chọn thay đổi
+    console.log("Selected date:", date);
+  };
+
   return (
     <Row className="main__wrapper">
       <MenuPage />
@@ -287,51 +387,85 @@ const Dashboard = () => {
               <div className="rechart mt-15">
                 <div className="d-flex db__text">
                   <div>
-                    <div className="db__t__1">Bảng thống kê theo tuần</div>
-                    <div className="db__t__2">Tháng 11/2021</div>
+                    <div className="db__t__1">
+                      Bảng thống kê theo {selectedOption}
+                    </div>
+                    <div className="db__t__2">
+                      {selectedOption === "tháng"
+                        ? `Năm ${moment().format("YYYY")}`
+                        : `Tháng ${moment().format("MM/YYYY")}`}
+                    </div>
                   </div>
                   <div>
                     <span className="db__t__3">Xem theo</span>
-                    <SelectCustom
-                      selectedValue={selected}
-                      options={options}
-                      onSelectChange={setSelected}
-                      style={{ width: "120px" }}
-                      selectClassName="ms-10"
-                    />
+                    <div className="select__custom">
+                      <select
+                        className="device__list__select ms-10"
+                        value={selectedOption}
+                        onChange={(e) =>
+                          setSelectedOption(
+                            e.target.value as "ngày" | "tuần" | "tháng"
+                          )
+                        }
+                        style={{ width: "120px" }}
+                      >
+                        {options.map((option, index) => (
+                          <option key={index} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="select-icon">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                        >
+                          <path d="M6 9L12 15L18 9" fill="#FF7506" />
+                          <path
+                            d="M6 9L12 15L18 9H6Z"
+                            stroke="#FF7506"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <ReactApexChart
-                    type="area"
-                    series={series}
-                    height={370}
-                    options={{
-                      chart: {
-                        type: "area",
-                      },
-                      dataLabels: {
-                        enabled: false,
-                      },
-                      stroke: {
-                        curve: "smooth",
-                      },
-                      xaxis: {
-                        type: "category",
-                        categories: [
-                          "01",
-                          "7",
-                          "11",
-                          "13",
-                          "",
-                          "19",
-                          "",
-                          "",
-                          "31",
-                        ],
-                      },
-                    }}
-                  />
+                  <ResponsiveContainer width={780} height={380}>
+                    <AreaChart data={filteredData}>
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="name" />
+                      <YAxis />
+                      <Tooltip />
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        fill="url(#colorGradient)"
+                        stroke="#5185F7"
+                      />
+                      <defs>
+                        <linearGradient
+                          id="colorGradient"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop offset="0%" stopColor="#CEDDFF" />
+                          <stop
+                            offset="100%"
+                            stopColor="rgba(206, 221, 255, 0.00)"
+                          />
+                        </linearGradient>
+                      </defs>
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             </div>
@@ -391,12 +525,22 @@ const Dashboard = () => {
                   <div className="d-flex items-center">
                     <div className="roll__1"></div>
                     <div className="text__db__3 ms-5">Đang hoạt động</div>
-                    <div className="text__db__4 ms-10">{totalDVDHD}</div>
+                    <div
+                      className="text__db__4 ms-10"
+                      style={{ marginLeft: "20px" }}
+                    >
+                      {totalDVDHD}
+                    </div>
                   </div>
                   <div className="d-flex items-center mt-10">
                     <div className="roll__2"></div>
                     <div className="text__db__3 ms-5">Ngưng hoạt động</div>
-                    <div className="text__db__4 ms-10">{totalDVNHD}</div>
+                    <div
+                      className="text__db__4 ms-10"
+                      style={{ marginLeft: "13px" }}
+                    >
+                      {totalDVNHD}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -437,12 +581,22 @@ const Dashboard = () => {
                   <div className="d-flex items-center">
                     <div className="roll__3"></div>
                     <div className="text__db__3 ms-5">Đang hoạt động</div>
-                    <div className="text__db__4 ms-10">{totalSVDHD}</div>
+                    <div
+                      className="text__db__4 ms-10 cl__blue"
+                      style={{ marginLeft: "20px" }}
+                    >
+                      {totalSVDHD}
+                    </div>
                   </div>
                   <div className="d-flex items-center mt-10">
                     <div className="roll__2"></div>
                     <div className="text__db__3 ms-5">Ngưng hoạt động</div>
-                    <div className="text__db__4 ms-10">{totalSVNHD}</div>
+                    <div
+                      className="text__db__4 ms-10 cl__blue"
+                      style={{ marginLeft: "13px" }}
+                    >
+                      {totalSVNHD}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -499,21 +653,30 @@ const Dashboard = () => {
                   <div className="d-flex items-center">
                     <div className="roll__4"></div>
                     <div className="text__db__3 ms-5">Đang chờ</div>
-                    <div className="text__db__4" style={{ marginLeft: "45px" }}>
+                    <div
+                      className="text__db__4 cl__green"
+                      style={{ marginLeft: "55px" }}
+                    >
                       {totalDC}
                     </div>
                   </div>
                   <div className="d-flex items-center ">
                     <div className="roll__2"></div>
                     <div className="text__db__3 ms-5">Đã sử dụng</div>
-                    <div className="text__db__4" style={{ marginLeft: "35px" }}>
+                    <div
+                      className="text__db__4 cl__green"
+                      style={{ marginLeft: "45px" }}
+                    >
                       {totalDSD}
                     </div>
                   </div>
                   <div className="d-flex items-center ">
                     <div className="roll__5"></div>
                     <div className="text__db__3 ms-5">Bỏ qua</div>
-                    <div className="text__db__4" style={{ marginLeft: "59px" }}>
+                    <div
+                      className="text__db__4 cl__green"
+                      style={{ marginLeft: "69px" }}
+                    >
                       {totalBQ}
                     </div>
                   </div>
@@ -521,7 +684,11 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="mt-20 ms-30 date__box">
-              {/* <DatePicker selected={new Date()} inline /> */}
+              <DatePicker
+                selected={new Date()}
+                onChange={handleDateChange}
+                inline
+              />
             </div>
           </Col>
         </Row>

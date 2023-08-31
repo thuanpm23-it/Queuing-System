@@ -24,8 +24,12 @@ import AccountList from "./../view/SystemInstallation/Account/List/index";
 import AccountAdd from "../view/SystemInstallation/Account/Add";
 import AccountUpdate from "../view/SystemInstallation/Account/Update";
 import UserLogList from "../view/SystemInstallation/UserLog";
+import UserDataUtil from "../components/UserData";
+import NumberAddWtlogin from "../view/NumberAllocation/AddWithoutLogin";
+import Protected from "../components/Protected";
 
 const Routers = () => {
+  const userData = UserDataUtil();
   return (
     <>
       <Routes>
@@ -34,37 +38,75 @@ const Routers = () => {
         <Route path="/forgotpassword" element={<ForgotPassword />} />
         <Route path="/newpassword" element={<NewPassword />} />
 
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile" element={<Protected Cmp={Profile} />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Protected Cmp={Dashboard} />} />
 
-        <Route path="/device" element={<DeviceList />} />
-        <Route path="/device/add" element={<DeviceAdd />} />
-        <Route path="/device/detail/:id" element={<DeviceDetail />} />
-        <Route path="/device/update/:id" element={<DeviceUpdate />} />
+        <Route path="/device" element={<Protected Cmp={DeviceList} />} />
+        <Route path="/device/add" element={<Protected Cmp={DeviceAdd} />} />
+        <Route
+          path="/device/detail/:id"
+          element={<Protected Cmp={DeviceDetail} />}
+        />
+        <Route
+          path="/device/update/:id"
+          element={<Protected Cmp={DeviceUpdate} />}
+        />
 
-        <Route path="/service" element={<ServiceList />} />
-        <Route path="/service/add" element={<ServiceAdd />} />
-        <Route path="/service/update/:id" element={<ServiceUpdate />} />
-        <Route path="/service/detail/:id" element={<ServiceDetail />} />
+        <Route path="/service" element={<Protected Cmp={ServiceList} />} />
+        <Route path="/service/add" element={<Protected Cmp={ServiceAdd} />} />
+        <Route
+          path="/service/update/:id"
+          element={<Protected Cmp={ServiceUpdate} />}
+        />
+        <Route
+          path="/service/detail/:id"
+          element={<Protected Cmp={ServiceDetail} />}
+        />
 
-        <Route path="/numberallocaiton" element={<NumberList />} />
-        <Route path="/numberallocaiton/add" element={<NumberAdd />} />
-        <Route path="/numberallocaiton/detail/:id" element={<NumberDetail />} />
+        <Route
+          path="/numberallocaiton"
+          element={<Protected Cmp={NumberList} />}
+        />
+        <Route
+          path="/numberallocaiton/add"
+          element={
+            userData ? <Protected Cmp={NumberAdd} /> : <NumberAddWtlogin />
+          }
+        />
+        <Route
+          path="/numberallocaiton/detail/:id"
+          element={<Protected Cmp={NumberDetail} />}
+        />
 
-        <Route path="/report" element={<ReportList />} />
+        <Route path="/report" element={<Protected Cmp={ReportList} />} />
 
         <Route path="/setting" element={<Navigate to="/setting/role" />} />
 
-        <Route path="/setting/role" element={<RoleList />} />
-        <Route path="/setting/role/add" element={<RoleAdd />} />
-        <Route path="/setting/role/update/:id" element={<RoleUpdate />} />
+        <Route path="/setting/role" element={<Protected Cmp={RoleList} />} />
+        <Route path="/setting/role/add" element={<Protected Cmp={RoleAdd} />} />
+        <Route
+          path="/setting/role/update/:id"
+          element={<Protected Cmp={RoleUpdate} />}
+        />
 
-        <Route path="/setting/account" element={<AccountList />} />
-        <Route path="/setting/account/add" element={<AccountAdd />} />
-        <Route path="/setting/account/update/:id" element={<AccountUpdate />} />
+        <Route
+          path="/setting/account"
+          element={<Protected Cmp={AccountList} />}
+        />
+        <Route
+          path="/setting/account/add"
+          element={<Protected Cmp={AccountAdd} />}
+        />
+        <Route
+          path="/setting/account/update/:id"
+          element={<Protected Cmp={AccountUpdate} />}
+        />
 
-        <Route path="/setting/userlog" element={<UserLogList />} />
+        <Route
+          path="/setting/userlog"
+          element={<Protected Cmp={UserLogList} />}
+        />
       </Routes>
     </>
   );

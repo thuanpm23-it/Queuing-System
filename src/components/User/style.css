@@ -22,8 +22,8 @@
 
 .notificantion__main.show {
   position: absolute;
-  top: 100%;
-  right: 250px;
+  top: 70px;
+  right: 300px;
   z-index: 520;
   height: 450px;
   background: #fff;
