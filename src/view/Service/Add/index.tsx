@@ -5,7 +5,14 @@ import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
 import TextArea from "antd/es/input/TextArea";
-import { DocumentData, addDoc, collection } from "firebase/firestore";
+import {
+  DocumentData,
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
@@ -47,6 +54,16 @@ const ServiceAdd = () => {
 
   const handleAddService = async () => {
     try {
+      const deviceQuery = query(
+        collection(db, "services"),
+        where("serviceCode", "==", serviceInfo.serviceCode)
+      );
+      const querySnapshot = await getDocs(deviceQuery);
+
+      if (!querySnapshot.empty) {
+        Modal.error({ content: "Mã thiết bị đã tồn tại!" });
+        return;
+      }
       for (const key in serviceInfo) {
         if (serviceInfo[key] === "") {
           Modal.error({ content: "Vui lòng điền đầy đủ thông tin." });

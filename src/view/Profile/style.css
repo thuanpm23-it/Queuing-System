@@ -57,9 +57,25 @@
   line-height: 36px;
 }
 
-.user {
+/* .user {
   width: 238px;
   height: 238px;
   border-radius: 50%;
   background: #535261;
+} */
+
+.add__image {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--orange-orange-500, #ff7506);
+  /* stroke-width: 2px;
+  stroke: var(--White, #fff); */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  position: absolute;
+  top: 390px;
+  left: 230px;
 }

@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../Login/style.css";
-import AltaLogo from "../../../assets/images/Logo alta.png";
-import GroupImg from "../../../assets/images/Group 341.png";
 import { Input, Row, Col } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../../config/firebase";
+import { AppDispatch } from "../../../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchImageData,
+  selectImgData,
+} from "../../../redux/slice/Image/slice";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -13,6 +17,14 @@ const Login = () => {
   const [loginError, setLoginError] = useState("");
 
   const navigate = useNavigate();
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const image = useSelector(selectImgData);
+
+  useEffect(() => {
+    dispatch(fetchImageData());
+  }, [dispatch]);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -53,7 +65,7 @@ const Login = () => {
       <Row className="login__wrapper">
         <Col span={9} className="login__box__1">
           <div>
-            <img src={AltaLogo} alt="Alta Logo" className="ms-120" />
+            <img src={image?.logo} alt="Alta Logo" className="ms-120" />
             <div className="login__box mt-50">
               <label className="login__label">Tên đăng nhập *</label> <br />
               <Input
@@ -134,7 +146,7 @@ const Login = () => {
           </div>
         </Col>
         <Col span={15} className="login__box__2">
-          <img src={GroupImg} alt="Group" className="login__img__2" />
+          <img src={image?.bg1} alt="Group" className="login__img__2" />
           <div className="login__text__box">
             <div className="login__text__1">Hệ thống</div>
             <div className="login__text__2">QUẢN LÝ XẾP HÀNG</div>

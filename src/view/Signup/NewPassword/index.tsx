@@ -1,7 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../NewPassword/style.css";
-import AltaLogo from "../../../assets/images/Logo alta.png";
-import ResetImg from "../../../assets/images/Frame.png";
 import { Input, Row, Col, Modal } from "antd";
 import {
   collection,
@@ -11,9 +9,14 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { db } from "../../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../../redux/store";
+import {
+  fetchImageData,
+  selectImgData,
+} from "../../../redux/slice/Image/slice";
 
 interface RootState {
   forgot: {
@@ -25,6 +28,14 @@ const NewPassword = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const image = useSelector(selectImgData);
+
+  useEffect(() => {
+    dispatch(fetchImageData());
+  }, [dispatch]);
 
   const forgotEmail = useSelector((state: RootState) => state.forgot.email);
 
@@ -60,7 +71,7 @@ const NewPassword = () => {
       <Row className="login__wrapper">
         <Col span={9} className="login__box__1">
           <div>
-            <img src={AltaLogo} alt="Alta Logo" className="ms-120" />
+            <img src={image?.logo} alt="Alta Logo" className="ms-120" />
             <div className="login__box mt-70">
               <div className="reset__text text-center mb-10">
                 Đặt lại mật khẩu mới
@@ -140,7 +151,7 @@ const NewPassword = () => {
           </div>
         </Col>
         <Col span={15} className="login__box__2">
-          <img src={ResetImg} alt="Group" className="reset__img" />
+          <img src={image?.bg2} alt="Group" className="reset__img" />
         </Col>
       </Row>
     </div>

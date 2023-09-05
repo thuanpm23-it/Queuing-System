@@ -10,12 +10,14 @@ import {
   fetchnumberData,
   selectnumberData,
 } from "../../redux/slice/Number/saveNumberSlice";
+import { fetchImageData, selectImgData } from "../../redux/slice/Image/slice";
 
 const User = () => {
   const userData = UserDataUtil();
   const dispatch: AppDispatch = useDispatch();
   const numberData = useSelector(selectnumberData);
   const [showNotification, setShowNotification] = useState(false);
+  const image = useSelector(selectImgData);
 
   const handleNotificationClick = () => {
     setShowNotification(!showNotification);
@@ -23,6 +25,7 @@ const User = () => {
 
   useEffect(() => {
     dispatch(fetchnumberData());
+    dispatch(fetchImageData());
   }, [dispatch]);
 
   return (
@@ -96,7 +99,11 @@ const User = () => {
                   className="profile__img__icon"
                 />
               ) : (
-                <div className="user__icon"></div>
+                <img
+                  src={image?.noimage}
+                  alt="Profile"
+                  className="profile__img__icon"
+                />
               )}
             </Link>
           </div>

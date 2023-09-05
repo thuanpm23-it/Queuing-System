@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../List/style.css";
-import { Col, Input, Row } from "antd";
+import { Col, Row } from "antd";
 import MenuPage from "../../../../layout/Menu";
 import Header from "../../../../layout/Header";
 import Pagination from "../../../../components/Pagination/Pagination";

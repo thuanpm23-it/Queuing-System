@@ -4,7 +4,14 @@ import { Col, Input, Modal, Select } from "antd";
 import { Row } from "antd";
 import MenuPage from "../../../layout/Menu";
 import Header from "../../../layout/Header";
-import { DocumentData, addDoc, collection } from "firebase/firestore";
+import {
+  DocumentData,
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../config/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { AppDispatch } from "../../../redux/store";
@@ -50,6 +57,16 @@ const DeviceAdd = () => {
 
   const handleAddDevice = async () => {
     try {
+      const deviceQuery = query(
+        collection(db, "devices"),
+        where("deviceCode", "==", deviceInfo.deviceCode)
+      );
+      const querySnapshot = await getDocs(deviceQuery);
+
+      if (!querySnapshot.empty) {
+        Modal.error({ content: "Mã thiết bị đã tồn tại!" });
+        return;
+      }
       for (const key in deviceInfo) {
         if (deviceInfo[key] === "") {
           Modal.error({ content: "Vui lòng điền đầy đủ thông tin!" });

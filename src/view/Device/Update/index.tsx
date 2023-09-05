@@ -9,7 +9,10 @@ import {
   addDoc,
   collection,
   doc,
+  getDocs,
+  query,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import { db } from "../../../config/firebase";

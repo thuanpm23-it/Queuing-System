@@ -1,20 +1,30 @@
-import React, { useState } from "react";
-import AltaLogo from "../../../assets/images/Logo alta.png";
-import ResetImg from "../../../assets/images/Frame.png";
+import React, { useEffect, useState } from "react";
 import { Input, Row, Col } from "antd";
 import "../ForgotPassword/style.css";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setEmailForgot } from "../../../redux/slice/ForgotPassword/forgotSlice";
 import { db } from "../../../config/firebase";
 import { Link } from "react-router-dom";
+import { AppDispatch } from "../../../redux/store";
+import {
+  fetchImageData,
+  selectImgData,
+} from "../../../redux/slice/Image/slice";
 
 const ForgotPassowrd = () => {
   const [email, setEmail] = useState("");
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const image = useSelector(selectImgData);
+
+  useEffect(() => {
+    dispatch(fetchImageData());
+  }, [dispatch]);
 
   const handleForgotPassword = async () => {
     if (!email) {
@@ -45,7 +55,7 @@ const ForgotPassowrd = () => {
       <Row className="login__wrapper">
         <Col span={9} className="login__box__1">
           <div>
-            <img src={AltaLogo} alt="Alta Logo" className="ms-120" />
+            <img src={image?.logo} alt="Alta Logo" className="ms-120" />
             <div className="login__box mt-100">
               <div className="reset__text text-center mb-10">
                 Đặt lại mật khẩu
@@ -124,7 +134,7 @@ const ForgotPassowrd = () => {
           </div>
         </Col>
         <Col span={15} className="login__box__2">
-          <img src={ResetImg} alt="Group" className="reset__img" />
+          <img src={image?.bg2} alt="Group" className="reset__img" />
         </Col>
       </Row>
     </div>

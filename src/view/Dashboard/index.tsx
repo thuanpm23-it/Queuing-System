@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../Dashboard/style.css";
 import MenuPage from "../../layout/Menu";
-import { CalendarProps, Col, Row } from "antd";
+import { Col, Row } from "antd";
 import Breadcrumb from "../../components/Breadcrums";
-import Img9 from "../../assets/images/Frame 625210 (1).png";
+// import Img9 from "../../assets/images/Frame 625210 (1).png";
 import User from "../../components/User";
 import { AppDispatch } from "../../redux/store";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,7 +30,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import moment from "moment";
-import { Dayjs } from "dayjs";
 
 interface DataPoint {
   name: string;
@@ -477,9 +476,7 @@ const Dashboard = () => {
             <div className="dashboard__text__1 mt-30 ms-30">Tổng quan</div>
             <div className="mt-5">
               <div className="dashboard__border__2 ms-30 d-flex items-center">
-                <div>
-                  <img src={Img9} alt="" />
-                </div>
+                <div>{/* <img src={Img9} alt="" /> */}</div>
 
                 <div className="ms-10">
                   <div className="text__db__1">{totalDevice}</div>
@@ -545,9 +542,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="dashboard__border__2 ms-30 d-flex items-center mt-15">
-                <div>
-                  <img src={Img9} alt="" />
-                </div>
+                <div>{/* <img src={Img9} alt="" /> */}</div>
 
                 <div className="ms-10">
                   <div className="text__db__1">{totalService}</div>
@@ -601,9 +596,7 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="dashboard__border__2 ms-30 d-flex items-center mt-15">
-                <div>
-                  <img src={Img9} alt="" />
-                </div>
+                <div>{/* <img src={Img9} alt="" /> */}</div>
 
                 <div className="ms-10">
                   <div className="text__db__1">{totalNumber}</div>

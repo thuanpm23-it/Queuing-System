@@ -8,6 +8,7 @@ import deviceReducer from "./slice/Device/deviceSlice";
 import serviceReducer from "./slice/Service/serviceSlice";
 import userlogReducer from "./slice/UserLog/userlogSlice";
 import authReducer from "./slice/Auth/slice";
+import imageReducer from "./slice/Image/slice";
 import thunkMiddleware from "redux-thunk";
 
 const store = configureStore({
@@ -20,6 +21,7 @@ const store = configureStore({
     service: serviceReducer,
     userlog: userlogReducer,
     auth: authReducer,
+    image: imageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(thunkMiddleware),
